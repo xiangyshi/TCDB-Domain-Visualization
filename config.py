@@ -1,3 +1,9 @@
-CLEAN_COMMAND = ["grep", "-v", "#", "outFile.cdd"]
+#CLEAN_COMMAND = ["grep", "-v", "#", "outFile.cdd"]
+CLEAN_COMMAND = ["findstr", "/v", "#", "outFile.cdd"]
 CUT_COMMAND = ["cut", "-f", "1-5,7-8"]
 SCALE = 100
+SYS_ID = 'query acc.'
+SYS_LEN = 'query length'
+DOM_ID = 'subject accs.'
+DOM_START = 'q. start'
+DOM_END = 'q. end'

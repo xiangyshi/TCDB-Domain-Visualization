@@ -56,22 +56,22 @@ def family_query(clean, OUT_FILE, STD):
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
 
     #Filter
-    #clean = clean[clean['family'] == '1.B.40']
-
-    families = clean['family'].unique()
-    for fam in families:
-        fam_df = clean[clean['family'] == fam]
-        char_dms, max_dm = char_domains(fam_df)
-        print(max_dm)
-        with open(OUT_FILE, 'a') as file:
-            file.write("\n\n")
-            file.write("#" + fam + "\n")
-            if len(char_dms) > 0:
-                file.write("Characteristic Domains:\n" + str(char_dms) + "\n")
-            else:
-                file.write("POTENTIAL CLASSIFICATION ERROR! \n")
-        file.close()
-        system_query(fam_df, OUT_FILE, STD, char_dms, max_dm)
+    clean = clean[clean['family'] == '1.B.40']
+    test_fam = Family(clean, '1.B.40')
+    # families = clean['family'].unique()
+    # for fam in families:
+    #     fam_df = clean[clean['family'] == fam]
+    #     char_dms, max_dm = char_domains(fam_df)
+    #     print(max_dm)
+    #     with open(OUT_FILE, 'a') as file:
+    #         file.write("\n\n")
+    #         file.write("#" + fam + "\n")
+    #         if len(char_dms) > 0:
+    #             file.write("Characteristic Domains:\n" + str(char_dms) + "\n")
+    #         else:
+    #             file.write("POTENTIAL CLASSIFICATION ERROR! \n")
+    #     file.close()
+    #     system_query(fam_df, OUT_FILE, STD, char_dms, max_dm)
 
 
 
@@ -87,14 +87,25 @@ def main():
     STD = bool(args.standardize)
 
     clean = get_clean(IN_FILE)
-    clean['subject accs.'] = clean['subject accs.'].apply(lambda x: x[4:])
+    clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
+    clean = clean[clean['family'] == '1.B.40']
+    palette = get_palette(clean)
+    print('Palette constructed.')
+    test_fam = Family(clean, '1.B.40')
+    print('Family built.')
+    test_fam.plot_general1(palette)
+    #test_fam.plot_general2(palette)
 
-    with open(OUT_FILE, 'w') as file:
-        file.write("")
-    file.close()
 
-    family_query(clean, OUT_FILE, STD)
+    
+    # clean['subject accs.'] = clean['subject accs.'].apply(lambda x: x[4:])
 
-    file.close()
+    # with open(OUT_FILE, 'w') as file:
+    #     file.write("")
+    # file.close()
+
+    # family_query(clean, OUT_FILE, STD)
+
+    # file.close()
 if __name__ == '__main__':
     main()
