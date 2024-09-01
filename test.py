@@ -1,9 +1,5 @@
-from util import *
-import seaborn as sns
+import numpy as np
 
-input = 'outFile.cdd'
-df = get_clean(input)
+choices = ['padadak', 'firespot']
 
-uniq_doms = df[DOM_ID].unique()
-palette = sns.color_palette("husl", n_colors=len(uniq_doms))
-domain_to_color = {domain: palette[i] for i, domain in enumerate(uniq_doms)}
+print(np.random.choice(choices, size=1))
