@@ -37,15 +37,26 @@ class Family:
         plot_general(): Generates the general plot in html format.
     """
      
-    def __init__(self, data, fam_id):
+    def __init__(self, data, fam_id, merge=True):
         self.data = data
         self.fam_id = fam_id
-        print("Gathering systems.")
+        self.merge = merge
+        #print("Gathering systems.")
         self.systems = self.get_systems()
-        print("Gathering char domains.")
+        #print("Gathering char domains.")
         self.char_domains = self.get_char_domains()
-        print("Creating palette.")
+        #print("Checking systems without char_domains.")
+        bad_sys = []
+        for sys in self.systems:
+            sys.check_char(self.char_domains)
+            if not sys.has_char:
+                bad_sys.append(sys.sys_id)
+        #print("Creating palette.")
         self.gen_palette, self.char_palette = self.get_palettes()
+
+        with open(ERROR_FILE, 'a') as file:
+            file.write(self.fam_id + '  ' + str(bad_sys) + '\n')
+
     
     def get_systems(self):
         res = []
@@ -57,23 +68,20 @@ class Family:
             if sys_len > self.max_sys_len:
                 self.max_sys_len = sys_len
             domains = self.get_domains(sys_len, curr)
+            if self.merge:
+                domains = merge_domains(domains)
             res.append(System(self.fam_id, sys_id, sys_len, domains))
         return res
     
     def get_domains(self, sys_len, data):
         domains = data[[DOM_START, DOM_END, DOM_ID]].sort_values(DOM_START)
-        domains_loc = np.array(domains[[DOM_START, DOM_END]])
-        links = np.array(find_links(sys_len, domains_loc))
-        domains = np.array(domains)
+        domains_loc = np.array(domains[[DOM_START, DOM_END]]).tolist()
+        links = find_links(sys_len, domains_loc)
 
-        if len(links) == 0:
-            links = links.reshape(0, 3)
-        if len(domains) == 0:
-            domains = domains.reshape(0, 3)
-
-        domains = np.concatenate((links, domains), axis=0)
-        return domains[domains[:, 0].argsort()]
-
+        domains = links + np.array(domains).tolist()
+        domains = sorted(domains, key=lambda x: x[0])
+        return domains
+    
     def get_char_domains(self, thresh=0.5):
         systems = self.data[SYS_ID].unique()
         domains = self.data[DOM_ID].unique()
@@ -126,7 +134,7 @@ class Family:
     def plot_general(self, mode='char'):
         svgs = []
         for i, sys in enumerate(self.systems):
-            size = len([0 for i in sys.domains if i[-1] != -1])
+            size = len([0 for i in sys.domains if i[-1] != "-1"])
             fig, ax = plt.subplots(figsize=(16, 0.25 * (size + 2)))  # Adjust size as needed
             
             ax.set_title(sys.sys_id)
@@ -143,8 +151,10 @@ class Family:
             gen_doms = sys.domains
             if mode == 'char':
                 gen_doms = [sys for sys in sys.domains if sys[-1] in self.char_domains] + [sys for sys in sys.domains if sys[-1] not in self.char_domains]
-            
+
             for dom in gen_doms:
+                if dom[-1] == "-1":
+                    continue
                 cnt -= 1
                 dom_ids.append(dom[2])
                 space = np.linspace(dom[0], dom[1], 2)
@@ -165,8 +175,7 @@ class Family:
             fig.savefig(svg_file, format='svg', bbox_inches='tight', pad_inches=0.2)
             svgs.append(svg_file)
             plt.close(fig)  # Close the figure to avoid memory issues
-
-        combine_svgs(svgs, 'plot_general.html')
+        combine_svgs(svgs, "general/"  + self.fam_id + "-e4.html")
     
     def plot_char(self):
         svgs = []
@@ -209,7 +218,7 @@ class Family:
         fig, ax = plt.subplots(figsize=(20, 9))
         for i, sys in enumerate(self.systems):
             for dom in sys.domains:
-                if dom[-1] == -1:
+                if dom[-1] == "-1":
                     ax.barh(i, dom[1] - dom[0], left=dom[0], height=0.03, color='blue')
                 else:
                     ax.barh(i, dom[1] - dom[0], left=dom[0], height=0.4, color='blue')
@@ -224,7 +233,8 @@ class Family:
         ax.set_title(self.fam_id + ' Summary')
 
         # Save the plot to an HTML file
-        fig.savefig("plots/plot_summary.svg")
+        fig.savefig("plots/summary/"  + self.fam_id + "-summary.svg")
+        plt.close()
 
 class System(Family):
     def __init__(self, fam_id, sys_id, sys_len, domains):
@@ -232,6 +242,13 @@ class System(Family):
         self.sys_id = sys_id
         self.sys_len = sys_len
         self.domains = domains
+    
+    def check_char(self, char_domains):
+        for dom in self.domains:
+            if dom[2] in char_domains:
+                self.has_char = True
+                return
+        self.has_char = False
 
 class Domain:
     def __init__(self, dom_id, start, end, type):
@@ -298,11 +315,11 @@ def find_links(p_length, domain_regions):
                 start = i + 1  # Convert to 1-based index
         else:
             if start is not None:
-                res.append([start, i, -1])  # Use i+1 to account for 1-based index
+                res.append([start, i, "-1"])  # Use i+1 to account for 1-based index
                 start = None
 
     if start is not None:
-        res.append([start, p_length, -1])
+        res.append([start, p_length, "-1"])
     return res
 
 def char_domains(fam_df, thresh=0.5):
@@ -327,7 +344,7 @@ def char_domains(fam_df, thresh=0.5):
     return res, max_domain
 
 def combine_svgs(svgs, filename):
-        html_content = '<html><head><title> Plots </title></head><body>'
+        html_content = ''
 
         for svg in svgs:
             with open(svg, 'r') as file:
@@ -339,3 +356,30 @@ def combine_svgs(svgs, filename):
         
         with open(f'plots/{filename}', "w") as f:
             f.write(html_content)
+
+def merge_domains(domains):
+    # Sort intervals by id and then by the start of the interval
+    domains = sorted(domains, key=lambda x: (x[2], x[0]))
+
+    merged = []
+    current_start, current_end, current_id = domains[0]
+
+    for i in range(1, len(domains)):
+        start, end, id_ = domains[i]
+
+        if id_ == current_id:
+            # If the intervals overlap, merge them
+            if start <= current_end:
+                current_end = max(current_end, end)
+            else:
+                # If they don't overlap, add the current interval to the result
+                merged.append((current_start, current_end, current_id))
+                current_start, current_end, current_id = start, end, id_
+        else:
+            # If the ID changes, add the current interval to the result
+            merged.append((current_start, current_end, current_id))
+            current_start, current_end, current_id = start, end, id_
+
+    # Add the last interval
+    merged.append((current_start, current_end, current_id))
+    return sorted(merged, key=lambda x : x[0])
