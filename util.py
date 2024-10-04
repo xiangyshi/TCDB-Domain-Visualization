@@ -1,4 +1,19 @@
-# Utility
+'''
+Module Name: util.py
+
+Description:
+    This module provides utility functions and classes to the driver 
+    code `domain_extract.py`, including the following classes:
+
+        `Family`: represents a protein family.
+        `System`: represents a system of a protein family.
+            (currently only supports single component systems)
+        `Domain`: represents a domain in a sequence of protein.
+
+Author: Leo
+Date: 2024-09-27
+Version: 1.0
+'''
 import subprocess
 import platform
 import os
@@ -10,34 +25,38 @@ import matplotlib.transforms as mtrs
 import seaborn as sns
 from collections import Counter
 from config import *
+import scipy.stats as stats
 
 # Plotting
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
-import mpld3
 
 class Family:
-    """
+    '''
     The Family class is used primarily to facilitate the organization of TCDB
     and plotting systems collectively with standardization.
 
-    Attributes:
-        data (DataFrame): Contains the cleaned output of this family from rpblast.
-        fam_id (String): Unique TCDB accession of this family.
-        systems (System[]): A collection of systems in the family represented by the System class.
-        char_domains (String[]): The set of characteristic domains of this family.
-        max_sys_len (Integer): The length of the longest protein in the family (for plot standardization).
-
+   
     Methods:
         Family(data: DataFrame, fam_id: String): Instantiates a Family object.
         get_systems(): Returns the list of systems of this family.
         get_domains(): TODO
         get_char_domains(): Returns the list of characteristic domains of this family.
         plot_general(): Generates the general plot in html format.
-    """
+    '''
      
     def __init__(self, data, fam_id, merge=True):
+        '''
+            Extracts and constructs a Family object.
+
+            Attributes:
+            data (pd.DataFrame): Contains the cleaned output of this family from rpblast.
+            fam_id (String): Unique TCDB accession of this family.
+            systems (System (list)): A collection of systems in the family represented by the System class.
+            char_domains (String (list)): The set of characteristic domains of this family.
+            max_sys_len (Integer): The length of the longest protein in the family (for plot standardization).
+        '''
         self.data = data
         self.fam_id = fam_id
         self.merge = merge
@@ -53,12 +72,14 @@ class Family:
                 bad_sys.append(sys.sys_id)
         #print("Creating palette.")
         self.gen_palette, self.char_palette = self.get_palettes()
-
-        with open(ERROR_FILE, 'a') as file:
-            file.write(self.fam_id + '  ' + str(bad_sys) + '\n')
-
     
     def get_systems(self):
+        '''
+        Retrieves the different systems stored in `self.data`, 
+        
+        Returns:
+            System (list): a list of constructed System objects.
+        '''
         res = []
         sys_ids = self.data[SYS_ID].unique()
         self.max_sys_len = 0
@@ -74,6 +95,18 @@ class Family:
         return res
     
     def get_domains(self, sys_len, data):
+        '''
+        Retrieves the list of domains in a given system. Requires 
+        data to contain domain hits from the same system.
+        
+        Attributes:
+            sys_len (int): the total length of the system.
+            data (pd.DataFrame): data containing hits only within this system.
+
+        Returns:
+            list: A list representation of domain hits, including
+                links that are present.
+        '''
         domains = data[[DOM_START, DOM_END, DOM_ID]].sort_values(DOM_START)
         domains_loc = np.array(domains[[DOM_START, DOM_END]]).tolist()
         links = find_links(sys_len, domains_loc)
@@ -83,6 +116,18 @@ class Family:
         return domains
     
     def get_char_domains(self, thresh=0.5):
+        '''
+        Retrieves a list of characteristic domains of the given family.
+
+        Attributes:
+            thresh (float): A value between 0 and 1, represents the threshold
+                precence percentage for a domain to be considered characteristic.
+                (i.e. 0.5 means if a domain is present in more than 50% of the
+                systems in the family, then it is characteristic.)
+        
+        Returns:
+            list: A list of domain id's that are considered characteristic.
+        '''
         systems = self.data[SYS_ID].unique()
         domains = self.data[DOM_ID].unique()
         domain_counts = []
@@ -99,7 +144,9 @@ class Family:
         return res
 
     def get_palettes(self):
-
+        '''
+        A helper function to create a color palette for enhanced visualization.
+        '''
         gen_doms = set(self.data[DOM_ID].unique()) - set(self.char_domains)
         gen_palette = sns.color_palette("husl", n_colors=len(gen_doms))
         gen_palette = {domain: mcolors.to_hex(gen_palette[i]) for i, domain in enumerate(gen_doms)}
@@ -108,30 +155,10 @@ class Family:
         char_palette = {domain: mcolors.to_hex(char_palette[i]) for i, domain in enumerate(self.char_domains)}
 
         return gen_palette, char_palette
-    
-    def plot_palette(self):
-        # Get the list of colors
-        colors = list(self.gen_palette.values())
-        
-        # Create a figure and axis
-        fig, ax = plt.subplots(figsize=(10, 2))
-        
-        # Create a color bar
-        n = len(colors)
-        for i, color in enumerate(colors):
-            ax.add_patch(plt.Rectangle((i / n, 0), 1 / n, 1, color=color))
-        
-        # Set axis limits and labels
-        ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.set_title('Color Palette')
-        
-        # Display the plot
-        plt.show()
 
     def plot_general(self, mode='char'):
+        '''
+        '''
         svgs = []
         for i, sys in enumerate(self.systems):
             size = len([0 for i in sys.domains if i[-1] != "-1"])
@@ -236,6 +263,37 @@ class Family:
         fig.savefig("plots/summary/"  + self.fam_id + "-summary.svg")
         plt.close()
 
+    def plot_arch(self):
+        char_domain_locs = {k:[] for k in self.char_domains}
+        char_domain_map = {k:[] for k in self.char_domains}
+        for system in self.systems:
+            for domain in system.domains:
+                if domain[-1] in char_domain_locs:
+                    char_domain_locs[domain[-1]].append([domain[0] / system.sys_len, domain[1] / system.sys_len])
+        
+        for char_dom, intervals in char_domain_locs.items():
+            start = confidence_interval_mean([i[0] for i in intervals])
+            end = confidence_interval_mean([i[1] for i in intervals])
+            char_domain_map[char_dom] = [start, end]
+        
+        #plot
+        cnt = 0
+        fig, ax = plt.subplots(figsize=(20, 9))
+        for key, value in char_domain_map.items():
+            ax.barh(cnt, value[1]-value[0], left=value[0], height=0.4)
+            print(key, cnt)
+            cnt += 1
+        
+        ax.set_yticks(range(len(self.char_domains)))  # Ensure y-ticks match the number of systems
+        ax.set_yticklabels(self.char_domains)  # Set the custom y-tick labels
+        
+        ax.set_xlabel('Residual')
+        ax.set_title(self.fam_id + ' Architecture')
+
+        fig.savefig("plots/arch/"  + self.fam_id + "-arch.svg")
+        plt.close()
+            
+
 class System(Family):
     def __init__(self, fam_id, sys_id, sys_len, domains):
         self.fam_id = fam_id
@@ -269,6 +327,9 @@ def get_clean(in_file) -> pd.DataFrame:
     CLEAN_COMMAND = UNIX_CLEAN_COMMAND
     if arch == 'Windows':
         CLEAN_COMMAND = WIN_CLEAN_COMMAND
+    
+    # Append input_file path
+    CLEAN_COMMAND += [in_file]
 
     try:
         # Obtain column headers
@@ -383,3 +444,12 @@ def merge_domains(domains):
     # Add the last interval
     merged.append((current_start, current_end, current_id))
     return sorted(merged, key=lambda x : x[0])
+
+def confidence_interval_mean(coords, confidence_level=0.95):
+    mean = np.mean(coords)
+    std_err = stats.sem(coords)
+    df = len(coords) - 1
+
+    ci = stats.t.interval(confidence_level, df, loc=mean, scale=std_err)
+    return np.mean(ci)
+

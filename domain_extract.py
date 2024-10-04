@@ -11,11 +11,16 @@ import numpy as np
 
 def main():
     parser = argparse.ArgumentParser(description="Extracts domains from given .cdd file.")
-    parser.add_argument("-m", "--merge", type=int, default=0, help="Merge overlapping domain hits.")
+    parser.add_argument("-m", "--merge", type=int, default=1, help="Merge overlapping domain hits.")
+    parser.add_argument("-i", "--input_file", type=str, help="Path of input CDD file.")
+    parser.add_argument("-d", "--debug", type=int, default=0, help="Show debug logs.")
 
     args = parser.parse_args()
     MERGE = bool(args.merge)
+    INPUT_FILE = args.input_file
+    DEBUG = bool(args.debug)
 
+    # Main
     import time
 
     # Calculate the start time
@@ -24,25 +29,18 @@ def main():
 
     clean = get_clean(INPUT_FILE) #TODO Preferablly merge here
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
-    #clean = clean[clean['query acc.'] == '1.B.40.1.1-P0C2W0']
-    with open(ERROR_FILE, 'w') as file:
-        file.write('')
+    clean = clean[clean['family'] == "1.B.40"]
+    #clean = clean[clean['query acc.'] == '1.A.104.1.1-P76298']
+    # with open(ERROR_FILE, 'w') as file:
+    #     file.write('')
         
     families = clean['family'].unique()
-    tot_fams = len(families)
-    with open('error.txt', 'r') as file:
-        for line in file:
-            if line[0] != '>':
-                continue
-            fam = line[1:].strip()
-            # print('Generating plots for', fam, str(round(i * 100 / tot_fams, 2))+ "%")
-            print(fam)
-            curr_fam_data = clean[clean['family'] == fam]
-            test_fam = Family(curr_fam_data, fam , MERGE)
-            test_fam.plot_general()
-
+    for fam in families:
+        test_fam = Family(clean[clean['family'] == fam], fam)
+        test_fam.plot_arch()
+        test_fam.plot_char()
     end = time.time()
-    print("Plot generation took:", round(end - start, 2), "seconds.")
+    print("Process took:", round(end - start, 2), "seconds.")
 
     #test_fam.plot_general2(palette)
 
