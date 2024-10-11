@@ -239,10 +239,10 @@ class Family:
             svgs.append(svg_file)
 
             plt.close(fig)  # Close the figure to avoid memory issues
-        combine_svgs(svgs, 'plot_character.html')
+        combine_svgs(svgs, '/char/' + self.fam_id + "-char.html")
 
     def plot_summary(self):
-        fig, ax = plt.subplots(figsize=(20, 9))
+        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.systems) + 2)))
         for i, sys in enumerate(self.systems):
             for dom in sys.domains:
                 if dom[-1] == "-1":
@@ -264,33 +264,90 @@ class Family:
         plt.close()
 
     def plot_arch(self):
+        if len(self.systems) <= 2:
+            print("System count too small, unable to accurately construct architecture. Skipping arch plot...")
+            return
+        
         char_domain_locs = {k:[] for k in self.char_domains}
-        char_domain_map = {k:[] for k in self.char_domains}
+        char_domain_map = {}
+        # Store char domain locations in format "char_dom_id" : [[#char_dom_id appearances in sys1], [#char_dom_id appearances in sys2], ... , [#char_dom_id appearances in sysn]]
         for system in self.systems:
+            sys_dom_locs = {k:[] for k in self.char_domains}
             for domain in system.domains:
                 if domain[-1] in char_domain_locs:
-                    char_domain_locs[domain[-1]].append([domain[0] / system.sys_len, domain[1] / system.sys_len])
-        
+                    sys_dom_locs[domain[-1]].append([domain[0] / system.sys_len, domain[1] / system.sys_len])
+            
+            
+            for char_dom in self.char_domains:
+                char_domain_locs[char_dom].append(sys_dom_locs[char_dom])
+        # Analyze structure, choose majority appearances (mode), update
+        for char_dom in self.char_domains:
+            curr_lst = char_domain_locs[char_dom]
+            
+            # TODO: better detection than mode
+            curr_mode = stats.mode([len(lst) for lst in curr_lst if len(lst) > 0])
+            curr_lst = [lst for lst in curr_lst if len(lst) == curr_mode.mode]
+            if curr_mode.mode > 1:
+                for i in range(curr_mode.mode):
+                    char_domain_locs[char_dom + ' ' + str(i)] = [lst[i] for lst in curr_lst]
+                del char_domain_locs[char_dom]
+            else:
+                char_domain_locs[char_dom] = [lst[0] for lst in curr_lst]
+
         for char_dom, intervals in char_domain_locs.items():
             start = confidence_interval_mean([i[0] for i in intervals])
             end = confidence_interval_mean([i[1] for i in intervals])
-            char_domain_map[char_dom] = [start, end]
-        
+            
+            components = char_dom.split(' ')
+            if len(components) > 1:
+                if components[0] in char_domain_map:
+                    char_domain_map[components[0]].append([start * 100, end * 100])
+                else:
+                    char_domain_map[components[0]] = [[start * 100, end * 100]]
+            else:
+                char_domain_map[char_dom] = [[start * 100, end * 100]]
+    
         #plot
         cnt = 0
-        fig, ax = plt.subplots(figsize=(20, 9))
-        for key, value in char_domain_map.items():
-            ax.barh(cnt, value[1]-value[0], left=value[0], height=0.4)
-            print(key, cnt)
+        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.char_domains) + 2)))
+        for char_dom, intervals in char_domain_map.items():
+            for interval in intervals:
+                ax.barh(cnt, interval[1]-interval[0], left=interval[0], height=0.4, color=self.char_palette[char_dom.split(' ')[0]])
             cnt += 1
         
-        ax.set_yticks(range(len(self.char_domains)))  # Ensure y-ticks match the number of systems
-        ax.set_yticklabels(self.char_domains)  # Set the custom y-tick labels
+        ax.set_yticks(range(len(char_domain_map)))  # Ensure y-ticks match the number of systems
+        ax.set_yticklabels(list(char_domain_map.keys()))  # Set the custom y-tick labels
         
-        ax.set_xlabel('Residual')
+        ax.set_xlabel('Residual Percentile %')
         ax.set_title(self.fam_id + ' Architecture')
 
-        fig.savefig("plots/arch/"  + self.fam_id + "-arch.svg")
+        ax.set_xlim(-1, 101)
+
+        svg = "plots/arch/"  + self.fam_id + "-arch.svg"
+        fig.savefig(svg)
+        plt.close()
+        combine_svgs([svg], '/arch/' + self.fam_id + "-arch.html")
+    
+    def plot_holes(self, thresh=50):
+        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.systems) + 2)))
+        for i, sys in enumerate(self.systems):
+            ax.barh(i, sys.sys_len, left=0, height=0.03, color='red')
+            for dom in sys.domains:
+                if dom[-1] == "-1" and dom[1] - dom[0] >= thresh:
+                    ax.barh(i, dom[1] - dom[0], left=dom[0], height=0.4, color='red')
+            
+
+        # Set y-ticks and y-tick labels
+        ax.set_yticks(range(len(self.systems)))  # Ensure y-ticks match the number of systems
+        sys_ids = [sys.sys_id.split('-')[0] for sys in self.systems]  # Collect the system IDs
+        ax.set_yticklabels(sys_ids)  # Set the custom y-tick labels
+        
+        # Set axis labels and title
+        ax.set_xlabel('Residual')
+        ax.set_title(self.fam_id + ' Holes')
+
+        # Save the plot to an HTML file
+        fig.savefig("plots/holes/"  + self.fam_id + "-holes.svg")
         plt.close()
             
 
@@ -446,6 +503,9 @@ def merge_domains(domains):
     return sorted(merged, key=lambda x : x[0])
 
 def confidence_interval_mean(coords, confidence_level=0.95):
+    if len(set(coords)) == 1:
+        return np.mean(coords)
+    
     mean = np.mean(coords)
     std_err = stats.sem(coords)
     df = len(coords) - 1
