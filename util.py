@@ -9,10 +9,6 @@ Description:
         `System`: represents a system of a protein family.
             (currently only supports single component systems)
         `Domain`: represents a domain in a sequence of protein.
-
-Author: Leo
-Date: 2024-09-27
-Version: 1.0
 '''
 import subprocess
 import platform
@@ -26,6 +22,7 @@ import seaborn as sns
 from collections import Counter
 from config import *
 import scipy.stats as stats
+import networkx as nx
 
 # Plotting
 import plotly.graph_objects as go
@@ -349,14 +346,50 @@ class Family:
         # Save the plot to an HTML file
         fig.savefig("plots/holes/"  + self.fam_id + "-holes.svg")
         plt.close()
-            
+    
+    def get_holes(self):
+        holes_dict = {sys.sys_id:sys.holes for sys in self.systems}
+        if sum([len(val) for val in holes_dict.values()]) == 0:
+            print(f"Family {self.fam_id} have no holes.")
+            return
+        return holes_dict
 
+    def generate_checklist(self):
+        holes = []
+        pairs = []
+        for sys in self.systems:
+            for hole in sys.holes:
+                holes.append(hole)
+        print(holes)
+        for i in range(len(holes)):
+            for j in range(i + 1, len(holes)):
+                if compare_margin(holes[i], holes[j]) >= 1:
+                    pairs.append([i, j])
+        idx_set = get_connected_components(len(holes), pairs)
+        
+        
+        print()
+        print()
+        print(idx_set)
+        res = []
+        start = []
+        for subset in idx_set:
+            res.append([holes[i].sys_id.split('-')[0] for i in subset])
+            start.append([holes[i].start for i in subset])
+        print(res)
+        print(start)
+        print()
+        print()
+        return res
+    
 class System(Family):
     def __init__(self, fam_id, sys_id, sys_len, domains):
         self.fam_id = fam_id
         self.sys_id = sys_id
         self.sys_len = sys_len
         self.domains = domains
+        self.holes = []
+        self.get_holes()
     
     def check_char(self, char_domains):
         for dom in self.domains:
@@ -364,6 +397,22 @@ class System(Family):
                 self.has_char = True
                 return
         self.has_char = False
+    
+    def get_holes(self, thresh=50, margin=10):
+        self.holes = []
+        for i, dom in enumerate(self.domains):
+            if dom[-1] == "-1" and dom[1] - dom[0] >= thresh:
+                left_doms, right_doms = find_margins(self.domains, dom[0] - margin, dom[1] + margin)
+                self.holes.append(Hole(self.sys_id, i, dom[0], dom[1], left_doms, right_doms))
+
+class Hole:
+    def __init__(self, sys_id, pos, start, end, left, right):
+        self.sys_id = sys_id
+        self.pos = pos
+        self.start = start
+        self.end = end
+        self.left = left
+        self.right = right
 
 class Domain:
     def __init__(self, dom_id, start, end, type):
@@ -513,3 +562,35 @@ def confidence_interval_mean(coords, confidence_level=0.95):
     ci = stats.t.interval(confidence_level, df, loc=mean, scale=std_err)
     return np.mean(ci)
 
+def find_margins(domains, margin_left, margin_right):
+    left_doms = []
+    right_doms = []
+    
+    for dom in domains:
+        if dom[0] <= margin_left and margin_left <= dom[1]:
+            left_doms.append(dom)
+        if dom[0] <= margin_right and margin_right <= dom[1]:
+            right_doms.append(dom)
+
+    return left_doms, right_doms
+
+def compare_margin(hole1, hole2):
+    h1_left = [dom[-1] for dom in hole1.left]
+    h2_left = [dom[-1] for dom in hole2.left]
+    h1_right = [dom[-1] for dom in hole1.right]
+    h2_right = [dom[-1] for dom in hole2.right]
+    return len(set(h1_left) & set(h2_left)) + len(set(h1_right) & set(h2_right))
+
+def get_connected_components(n, pair_list):
+    G = nx.Graph()
+    
+    # Add all nodes (1-indexed)
+    G.add_nodes_from(range(0, n))
+    
+    # Add all edges (the pairs from the pair_list)
+    G.add_edges_from(pair_list)
+    
+    # Get connected components
+    connected_components = list(nx.connected_components(G))
+    
+    return connected_components

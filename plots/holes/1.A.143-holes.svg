@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2024-10-10T23:13:13.414789</dc:date>
+    <dc:date>2024-10-18T14:15:35.027727</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -43,7 +43,7 @@ L 994.285714 76.95
 L 994.285714 76.018966 
 L 144 76.018966 
 z
-" clip-path="url(#pc5c4545eda)" style="fill: #ff0000"/>
+" clip-path="url(#p0fd55d34b1)" style="fill: #ff0000"/>
    </g>
    <g id="patch_4">
     <path d="M 144 45.915517 
@@ -51,7 +51,7 @@ L 994.285714 45.915517
 L 994.285714 44.984483 
 L 144 44.984483 
 z
-" clip-path="url(#pc5c4545eda)" style="fill: #ff0000"/>
+" clip-path="url(#p0fd55d34b1)" style="fill: #ff0000"/>
    </g>
    <g id="patch_5">
     <path d="M 144 14.881034 
@@ -59,18 +59,18 @@ L 994.285714 14.881034
 L 994.285714 13.95 
 L 144 13.95 
 z
-" clip-path="url(#pc5c4545eda)" style="fill: #ff0000"/>
+" clip-path="url(#p0fd55d34b1)" style="fill: #ff0000"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m4be2faf3dc" d="M 0 0 
+       <path id="m7fd93b515f" d="M 0 0 
 L 0 3.5 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m4be2faf3dc" x="144" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="144" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_1">
@@ -106,7 +106,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use xlink:href="#m4be2faf3dc" x="304.431267" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="304.431267" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_2">
@@ -136,7 +136,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use xlink:href="#m4be2faf3dc" x="464.862534" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="464.862534" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_3">
@@ -176,7 +176,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use xlink:href="#m4be2faf3dc" x="625.293801" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="625.293801" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_4">
@@ -224,7 +224,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use xlink:href="#m4be2faf3dc" x="785.725067" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="785.725067" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_5">
@@ -259,7 +259,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use xlink:href="#m4be2faf3dc" x="946.156334" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#m7fd93b515f" x="946.156334" y="80.1" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_6">
@@ -502,12 +502,12 @@ z
     <g id="ytick_1">
      <g id="line2d_7">
       <defs>
-       <path id="m05e061b892" d="M 0 0 
+       <path id="mfb2ae3c19c" d="M 0 0 
 L -3.5 0 
 " style="stroke: #000000; stroke-width: 0.8"/>
       </defs>
       <g>
-       <use xlink:href="#m05e061b892" x="144" y="76.484483" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mfb2ae3c19c" x="144" y="76.484483" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_8">
@@ -555,7 +555,7 @@ z
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use xlink:href="#m05e061b892" x="144" y="45.45" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mfb2ae3c19c" x="144" y="45.45" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_9">
@@ -578,7 +578,7 @@ z
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use xlink:href="#m05e061b892" x="144" y="14.415517" style="stroke: #000000; stroke-width: 0.8"/>
+       <use xlink:href="#mfb2ae3c19c" x="144" y="14.415517" style="stroke: #000000; stroke-width: 0.8"/>
       </g>
      </g>
      <g id="text_10">
@@ -679,7 +679,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pc5c4545eda">
+  <clipPath id="p0fd55d34b1">
    <rect x="144" y="10.8" width="892.8" height="69.3"/>
   </clipPath>
  </defs>
