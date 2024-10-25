@@ -68,7 +68,9 @@ class Family:
             if not sys.has_char:
                 bad_sys.append(sys.sys_id)
         #print("Creating palette.")
-        self.gen_palette, self.char_palette = self.get_palettes()
+
+        self.holes = self.generate_checklist()
+        self.gen_palette, self.char_palette, self.hole_palette = self.get_palettes()
     
     def get_systems(self):
         '''
@@ -151,7 +153,10 @@ class Family:
         char_palette = sns.color_palette("husl", n_colors=len(self.char_domains))
         char_palette = {domain: mcolors.to_hex(char_palette[i]) for i, domain in enumerate(self.char_domains)}
 
-        return gen_palette, char_palette
+        hole_palette = sns.color_palette("husl", n_colors=len(self.holes))
+        hole_palette = {i: mcolors.to_hex(hole_palette[i]) for i in range(len(self.holes))}
+
+        return gen_palette, char_palette, hole_palette
 
     def plot_general(self, mode='char'):
         '''
@@ -325,20 +330,21 @@ class Family:
         plt.close()
         combine_svgs([svg], '/arch/' + self.fam_id + "-arch.html")
     
-    def plot_holes(self, thresh=50):
+    def plot_holes(self):
         fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.systems) + 2)))
-        for i, sys in enumerate(self.systems):
-            ax.barh(i, sys.sys_len, left=0, height=0.03, color='red')
-            for dom in sys.domains:
-                if dom[-1] == "-1" and dom[1] - dom[0] >= thresh:
-                    ax.barh(i, dom[1] - dom[0], left=dom[0], height=0.4, color='red')
-            
-
+    
         # Set y-ticks and y-tick labels
         ax.set_yticks(range(len(self.systems)))  # Ensure y-ticks match the number of systems
-        sys_ids = [sys.sys_id.split('-')[0] for sys in self.systems]  # Collect the system IDs
-        ax.set_yticklabels(sys_ids)  # Set the custom y-tick labels
+        sys_ids = {sys.sys_id.split('-')[0]:i for i, sys in enumerate(self.systems)}  # Collect the system IDs
+        ax.set_yticklabels(list(sys_ids.keys()))  # Set the custom y-tick labels
         
+        for sys in self.systems:
+            ax.barh(sys_ids[sys.sys_id.split("-")[0]], sys.sys_len, left=0, color="red", height=0.03)
+        
+        for i, group in enumerate(self.holes):
+            for hole in group:
+                ax.barh(sys_ids[hole.sys_id], hole.end - hole.start, color=self.hole_palette[i], left=hole.start, height=0.4)
+
         # Set axis labels and title
         ax.set_xlabel('Residual')
         ax.set_title(self.fam_id + ' Holes')
@@ -347,40 +353,19 @@ class Family:
         fig.savefig("plots/holes/"  + self.fam_id + "-holes.svg")
         plt.close()
     
-    def get_holes(self):
-        holes_dict = {sys.sys_id:sys.holes for sys in self.systems}
-        if sum([len(val) for val in holes_dict.values()]) == 0:
-            print(f"Family {self.fam_id} have no holes.")
-            return
-        return holes_dict
-
     def generate_checklist(self):
         holes = []
         pairs = []
         for sys in self.systems:
             for hole in sys.holes:
                 holes.append(hole)
-        print(holes)
         for i in range(len(holes)):
             for j in range(i + 1, len(holes)):
-                if compare_margin(holes[i], holes[j]) >= 1:
+                if compare_reference(holes[i], holes[j]):
                     pairs.append([i, j])
-        idx_set = get_connected_components(len(holes), pairs)
+        idx_sets = get_connected_components(len(holes), pairs)
         
-        
-        print()
-        print()
-        print(idx_set)
-        res = []
-        start = []
-        for subset in idx_set:
-            res.append([holes[i].sys_id.split('-')[0] for i in subset])
-            start.append([holes[i].start for i in subset])
-        print(res)
-        print(start)
-        print()
-        print()
-        return res
+        return [[holes[i] for i in idx_set] for idx_set in idx_sets]
     
 class System(Family):
     def __init__(self, fam_id, sys_id, sys_len, domains):
@@ -403,16 +388,28 @@ class System(Family):
         for i, dom in enumerate(self.domains):
             if dom[-1] == "-1" and dom[1] - dom[0] >= thresh:
                 left_doms, right_doms = find_margins(self.domains, dom[0] - margin, dom[1] + margin)
-                self.holes.append(Hole(self.sys_id, i, dom[0], dom[1], left_doms, right_doms))
+
+                names = set()
+                if len(left_doms) == 0:
+                    for dom in right_doms:
+                        names.add((None, dom[-1]))
+                elif len(right_doms) == 0:
+                    for dom in left_doms:
+                        names.add((dom[-1], None))
+                else:
+                    for ldom in left_doms:
+                        for rdom in right_doms:
+                            names.add((ldom[-1], rdom[-1]))
+
+                self.holes.append(Hole(self.sys_id.split('-')[0], i, names, dom[0], dom[1]))
 
 class Hole:
-    def __init__(self, sys_id, pos, start, end, left, right):
+    def __init__(self, sys_id, pos, names, start, end):
         self.sys_id = sys_id
         self.pos = pos
+        self.names = names
         self.start = start
         self.end = end
-        self.left = left
-        self.right = right
 
 class Domain:
     def __init__(self, dom_id, start, end, type):
@@ -574,12 +571,8 @@ def find_margins(domains, margin_left, margin_right):
 
     return left_doms, right_doms
 
-def compare_margin(hole1, hole2):
-    h1_left = [dom[-1] for dom in hole1.left]
-    h2_left = [dom[-1] for dom in hole2.left]
-    h1_right = [dom[-1] for dom in hole1.right]
-    h2_right = [dom[-1] for dom in hole2.right]
-    return len(set(h1_left) & set(h2_left)) + len(set(h1_right) & set(h2_right))
+def compare_reference(hole1, hole2):
+    return len(hole1.names & hole2.names) != 0
 
 def get_connected_components(n, pair_list):
     G = nx.Graph()

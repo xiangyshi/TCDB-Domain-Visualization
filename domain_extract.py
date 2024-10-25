@@ -29,8 +29,8 @@ def main():
 
     clean = get_clean(INPUT_FILE) #TODO Preferablly merge here
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
-    clean = clean[clean['family'] == "1.A.119"]
-    #clean = clean[clean['query acc.'] == '1.A.104.1.1-P76298']
+    # clean = clean[clean['family'] == "1.A.119"]
+    # clean = clean[clean['query acc.'] == '1.A.104.1.1-P76298']
     # with open(ERROR_FILE, 'w') as file:
     #     file.write('')
 
@@ -38,7 +38,11 @@ def main():
     families = clean['family'].unique()
     for cnt, fam in enumerate(families):
         curr_fam = Family(clean[clean["family"] == fam], fam)
-        curr_fam.generate_checklist()
+        curr_fam.plot_arch()
+        curr_fam.plot_char()
+        curr_fam.plot_general()
+        curr_fam.plot_summary()
+        curr_fam.plot_holes()
         print(fam, str(round(float(cnt * 100) / len(families), 2)) + "%")
         #test_fam = Family(clean[clean['family'] == fam], fam)
         #test_fam.plot_holes()
