@@ -204,13 +204,13 @@ class Family:
             fig.savefig(svg_file, format='svg', bbox_inches='tight', pad_inches=0.2)
             svgs.append(svg_file)
             plt.close(fig)  # Close the figure to avoid memory issues
-        combine_svgs(svgs, "general/"  + self.fam_id + "-e4.html")
+        combine_svgs(svgs, "general/"  + self.fam_id + ".html")
     
     def plot_char(self):
         svgs = []
         for i, sys in enumerate(self.systems):
             char_doms = [dom for dom in sys.domains if dom[-1] in self.char_domains]
-            fig, ax = plt.subplots(figsize=(16, 0.25 * (len(char_doms) + 2)))  # Adjust size as needed
+            fig, ax = plt.subplots(figsize=(16, 0.3 * (len(char_doms) + 2)))  # Adjust size as needed
             
             ax.set_title(sys.sys_id)
             ax.set_xlabel('Residual')
@@ -244,7 +244,7 @@ class Family:
         combine_svgs(svgs, '/char/' + self.fam_id + "-char.html")
 
     def plot_summary(self):
-        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.systems) + 2)))
+        fig, ax = plt.subplots(figsize=(16, 0.3 * (len(self.systems) + 2)))
         for i, sys in enumerate(self.systems):
             for dom in sys.domains:
                 if dom[-1] == "-1":
@@ -311,10 +311,11 @@ class Family:
     
         #plot
         cnt = 0
-        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.char_domains) + 2)))
+        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.char_domains) + 15)))
         for char_dom, intervals in char_domain_map.items():
             for interval in intervals:
-                ax.barh(cnt, interval[1]-interval[0], left=interval[0], height=0.4, color=self.char_palette[char_dom.split(' ')[0]])
+                space = np.linspace(interval[0], interval[1], 2)
+                ax.plot(space, [cnt] * 2, color=self.char_palette[char_dom.split(' ')[0]], label=char_dom.split(' ')[0], linewidth=8)
             cnt += 1
         
         ax.set_yticks(range(len(char_domain_map)))  # Ensure y-ticks match the number of systems
@@ -331,7 +332,7 @@ class Family:
         combine_svgs([svg], '/arch/' + self.fam_id + "-arch.html")
     
     def plot_holes(self):
-        fig, ax = plt.subplots(figsize=(16, 0.25 * (len(self.systems) + 2)))
+        fig, ax = plt.subplots(figsize=(16, 0.3 * (len(self.systems) + 2)))
     
         # Set y-ticks and y-tick labels
         ax.set_yticks(range(len(self.systems)))  # Ensure y-ticks match the number of systems
@@ -373,7 +374,6 @@ class System(Family):
         self.sys_id = sys_id
         self.sys_len = sys_len
         self.domains = domains
-        self.holes = []
         self.get_holes()
     
     def check_char(self, char_domains):
@@ -391,11 +391,11 @@ class System(Family):
 
                 names = set()
                 if len(left_doms) == 0:
-                    for dom in right_doms:
-                        names.add((None, dom[-1]))
+                    for rdom in right_doms:
+                        names.add((None, rdom[-1]))
                 elif len(right_doms) == 0:
-                    for dom in left_doms:
-                        names.add((dom[-1], None))
+                    for ldom in left_doms:
+                        names.add((ldom[-1], None))
                 else:
                     for ldom in left_doms:
                         for rdom in right_doms:
