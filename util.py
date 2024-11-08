@@ -24,11 +24,6 @@ from config import *
 import scipy.stats as stats
 import networkx as nx
 
-# Plotting
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import plotly.io as pio
-
 class Family:
     '''
     The Family class is used primarily to facilitate the organization of TCDB
@@ -57,11 +52,9 @@ class Family:
         self.data = data
         self.fam_id = fam_id
         self.merge = merge
-        #print("Gathering systems.")
+        self.sequence_map = self.get_sequences()
         self.systems = self.get_systems()
-        #print("Gathering char domains.")
         self.char_domains = self.get_char_domains()
-        #print("Checking systems without char_domains.")
         bad_sys = []
         for sys in self.systems:
             sys.check_char(self.char_domains)
@@ -72,6 +65,16 @@ class Family:
         self.holes = self.generate_checklist()
         self.gen_palette, self.char_palette, self.hole_palette = self.get_palettes()
     
+    def get_sequences(self):
+        sequence_map = {}
+        faa_path = "./sequences/tcdb-" + self.fam_id + ".faa"
+        with open(faa_path, 'r') as sfile:
+            lines = sfile.readlines()
+            for i in range(len(lines)):
+                if i % 2 == 0:
+                    sequence_map[lines[i][1:].strip()] = lines[i+1].strip()
+        return sequence_map
+
     def get_systems(self):
         '''
         Retrieves the different systems stored in `self.data`, 
@@ -90,7 +93,7 @@ class Family:
             domains = self.get_domains(sys_len, curr)
             if self.merge:
                 domains = merge_domains(domains)
-            res.append(System(self.fam_id, sys_id, sys_len, domains))
+            res.append(System(self.fam_id, sys_id, sys_len, domains, self.sequence_map[sys_id]))
         return res
     
     def get_domains(self, sys_len, data):
@@ -366,14 +369,25 @@ class Family:
                     pairs.append([i, j])
         idx_sets = get_connected_components(len(holes), pairs)
         
-        return [[holes[i] for i in idx_set] for idx_set in idx_sets]
+        res = [[holes[i] for i in idx_set] for idx_set in idx_sets]
+        with open("./holes/" + self.fam_id + "_holes.txt", "w") as file:
+            for i, group in enumerate(res):
+                file.write(f">Group {i}\n")
+                for hole in group:
+                    file.write(hole.sequence)
+                    file.write("\n")
+                file.write("\n")
+            
+
+        return res
     
 class System(Family):
-    def __init__(self, fam_id, sys_id, sys_len, domains):
+    def __init__(self, fam_id, sys_id, sys_len, domains, sequence):
         self.fam_id = fam_id
         self.sys_id = sys_id
         self.sys_len = sys_len
         self.domains = domains
+        self.sequence = sequence
         self.get_holes()
     
     def check_char(self, char_domains):
@@ -401,15 +415,18 @@ class System(Family):
                         for rdom in right_doms:
                             names.add((ldom[-1], rdom[-1]))
 
-                self.holes.append(Hole(self.sys_id.split('-')[0], i, names, dom[0], dom[1]))
+                self.holes.append(Hole(self.sys_id.split('-')[0], i, names, dom[0], dom[1], self.sequence[dom[0] - 1: dom[1]]))
+
 
 class Hole:
-    def __init__(self, sys_id, pos, names, start, end):
+    def __init__(self, sys_id, pos, names, start, end, sequence):
         self.sys_id = sys_id
         self.pos = pos
         self.names = names
         self.start = start
         self.end = end
+        self.sequence = sequence
+
 
 class Domain:
     def __init__(self, dom_id, start, end, type):

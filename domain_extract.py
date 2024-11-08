@@ -36,30 +36,19 @@ def main():
 
          
     families = clean['family'].unique()
+
     for cnt, fam in enumerate(families):
         curr_fam = Family(clean[clean["family"] == fam], fam)
-        curr_fam.plot_char()
-        curr_fam.plot_general()
-        curr_fam.plot_summary()
-        curr_fam.plot_holes()
-        curr_fam.plot_arch()
+        # curr_fam.plot_char()
+        # curr_fam.plot_general()
+        # curr_fam.plot_summary()
+        # curr_fam.plot_holes()
+        # curr_fam.plot_arch()
         print(fam, str(round(float(cnt * 100) / len(families), 2)) + "%")
 
     end = time.time()
     print("Process took", int((end - start) // 60), "minutes", int(round(end - start, 0)) % 60, "seconds.")
 
-    #test_fam.plot_general2(palette)
 
-
-    
-    # clean['subject accs.'] = clean['subject accs.'].apply(lambda x: x[4:])
-
-    # with open(OUT_FILE, 'w') as file:
-    #     file.write("")
-    # file.close()
-
-    # family_query(clean, OUT_FILE, STD)
-
-    # file.close()
 if __name__ == '__main__':
     main()
