@@ -1,0 +1,96 @@
+
+
+
+ CLUSTAL 2.1 Multiple Sequence Alignments
+
+
+Sequence format is Pearson
+Sequence 1: 8.A.136_g0_0     62 aa
+Sequence 2: 8.A.136_g0_1    213 aa
+Sequence 3: 8.A.136_g0_2    100 aa
+Sequence 4: 8.A.136_g0_3     93 aa
+Sequence 5: 8.A.136_g0_4    133 aa
+Sequence 6: 8.A.136_g0_5     60 aa
+Sequence 7: 8.A.136_g0_6    121 aa
+Sequence 8: 8.A.136_g0_7    203 aa
+Sequence 9: 8.A.136_g0_8    166 aa
+Sequence 10: 8.A.136_g0_9    120 aa
+Sequence 11: 8.A.136_g0_10   298 aa
+Start of Pairwise alignments
+Aligning...
+
+Sequences (1:2) Aligned. Score:  8
+Sequences (1:3) Aligned. Score:  12
+Sequences (1:4) Aligned. Score:  9
+Sequences (1:5) Aligned. Score:  9
+Sequences (1:6) Aligned. Score:  55
+Sequences (1:7) Aligned. Score:  8
+Sequences (1:8) Aligned. Score:  12
+Sequences (1:9) Aligned. Score:  8
+Sequences (1:10) Aligned. Score:  6
+Sequences (1:11) Aligned. Score:  9
+Sequences (2:3) Aligned. Score:  15
+Sequences (2:4) Aligned. Score:  10
+Sequences (2:5) Aligned. Score:  10
+Sequences (2:6) Aligned. Score:  8
+Sequences (2:7) Aligned. Score:  17
+Sequences (2:8) Aligned. Score:  6
+Sequences (2:9) Aligned. Score:  6
+Sequences (2:10) Aligned. Score:  5
+Sequences (2:11) Aligned. Score:  15
+Sequences (3:4) Aligned. Score:  37
+Sequences (3:5) Aligned. Score:  10
+Sequences (3:6) Aligned. Score:  8
+Sequences (3:7) Aligned. Score:  11
+Sequences (3:8) Aligned. Score:  14
+Sequences (3:9) Aligned. Score:  4
+Sequences (3:10) Aligned. Score:  12
+Sequences (3:11) Aligned. Score:  16
+Sequences (4:5) Aligned. Score:  5
+Sequences (4:6) Aligned. Score:  6
+Sequences (4:7) Aligned. Score:  12
+Sequences (4:8) Aligned. Score:  12
+Sequences (4:9) Aligned. Score:  3
+Sequences (4:10) Aligned. Score:  10
+Sequences (4:11) Aligned. Score:  11
+Sequences (5:6) Aligned. Score:  6
+Sequences (5:7) Aligned. Score:  5
+Sequences (5:8) Aligned. Score:  3
+Sequences (5:9) Aligned. Score:  6
+Sequences (5:10) Aligned. Score:  14
+Sequences (5:11) Aligned. Score:  7
+Sequences (6:7) Aligned. Score:  8
+Sequences (6:8) Aligned. Score:  11
+Sequences (6:9) Aligned. Score:  1
+Sequences (6:10) Aligned. Score:  10
+Sequences (6:11) Aligned. Score:  8
+Sequences (7:8) Aligned. Score:  4
+Sequences (7:9) Aligned. Score:  7
+Sequences (7:10) Aligned. Score:  5
+Sequences (7:11) Aligned. Score:  13
+Sequences (8:9) Aligned. Score:  4
+Sequences (8:10) Aligned. Score:  7
+Sequences (8:11) Aligned. Score:  14
+Sequences (9:10) Aligned. Score:  5
+Sequences (9:11) Aligned. Score:  10
+Sequences (10:11) Aligned. Score:  15
+Guide tree file created:   [holes\8.A.136_0_holes.dnd]
+
+There are 10 groups
+Start of Multiple Alignment
+
+Aligning...
+Group 1:                     Delayed
+Group 2: Sequences:   2      Score:921
+Group 3:                     Delayed
+Group 4: Sequences:   2      Score:1406
+Group 5: Sequences:   4      Score:216
+Group 6:                     Delayed
+Group 7:                     Delayed
+Group 8:                     Delayed
+Group 9:                     Delayed
+Group 10:                     Delayed
+Alignment Score -4270
+
+CLUSTAL-Alignment file created  [aligns\8.A.136_0_align.aln]
+

@@ -1,0 +1,28 @@
+
+
+
+ CLUSTAL 2.1 Multiple Sequence Alignments
+
+
+Sequence format is Pearson
+Sequence 1: 9.B.247_g11_0   893 aa
+Sequence 2: 9.B.247_g11_1  1061 aa
+Sequence 3: 9.B.247_g11_2   686 aa
+Start of Pairwise alignments
+Aligning...
+
+Sequences (1:2) Aligned. Score:  14
+Sequences (1:3) Aligned. Score:  9
+Sequences (2:3) Aligned. Score:  12
+Guide tree file created:   [holes\9.B.247_11_holes.dnd]
+
+There are 2 groups
+Start of Multiple Alignment
+
+Aligning...
+Group 1:                     Delayed
+Group 2:                     Delayed
+Alignment Score -275
+
+CLUSTAL-Alignment file created  [aligns\9.B.247_11_align.aln]
+

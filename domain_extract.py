@@ -8,6 +8,7 @@ from util import *
 from config import *
 import argparse
 import numpy as np
+from Family import *
 
 def main():
     parser = argparse.ArgumentParser(description="Extracts domains from given .cdd file.")
@@ -44,6 +45,7 @@ def main():
         # curr_fam.plot_summary()
         # curr_fam.plot_holes()
         # curr_fam.plot_arch()
+        curr_fam.generate_checklist()
         print(fam, str(round(float(cnt * 100) / len(families), 2)) + "%")
 
     end = time.time()

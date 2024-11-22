@@ -1,0 +1,54 @@
+
+
+
+ CLUSTAL 2.1 Multiple Sequence Alignments
+
+
+Sequence format is Pearson
+Sequence 1: 8.A.83_g1_0   227 aa
+Sequence 2: 8.A.83_g1_1   248 aa
+Sequence 3: 8.A.83_g1_2   172 aa
+Sequence 4: 8.A.83_g1_3   405 aa
+Sequence 5: 8.A.83_g1_4   124 aa
+Sequence 6: 8.A.83_g1_5    83 aa
+Sequence 7: 8.A.83_g1_6    63 aa
+Start of Pairwise alignments
+Aligning...
+
+Sequences (1:2) Aligned. Score:  7
+Sequences (1:3) Aligned. Score:  29
+Sequences (1:4) Aligned. Score:  33
+Sequences (1:5) Aligned. Score:  6
+Sequences (1:6) Aligned. Score:  10
+Sequences (1:7) Aligned. Score:  11
+Sequences (2:3) Aligned. Score:  15
+Sequences (2:4) Aligned. Score:  20
+Sequences (2:5) Aligned. Score:  14
+Sequences (2:6) Aligned. Score:  18
+Sequences (2:7) Aligned. Score:  26
+Sequences (3:4) Aligned. Score:  23
+Sequences (3:5) Aligned. Score:  4
+Sequences (3:6) Aligned. Score:  6
+Sequences (3:7) Aligned. Score:  20
+Sequences (4:5) Aligned. Score:  11
+Sequences (4:6) Aligned. Score:  15
+Sequences (4:7) Aligned. Score:  28
+Sequences (5:6) Aligned. Score:  20
+Sequences (5:7) Aligned. Score:  15
+Sequences (6:7) Aligned. Score:  12
+Guide tree file created:   [holes\8.A.83_1_holes.dnd]
+
+There are 6 groups
+Start of Multiple Alignment
+
+Aligning...
+Group 1:                     Delayed
+Group 2:                     Delayed
+Group 3:                     Delayed
+Group 4:                     Delayed
+Group 5:                     Delayed
+Group 6:                     Delayed
+Alignment Score -482
+
+CLUSTAL-Alignment file created  [aligns\8.A.83_1_align.aln]
+

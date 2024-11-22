@@ -1,0 +1,73 @@
+
+
+
+ CLUSTAL 2.1 Multiple Sequence Alignments
+
+
+Sequence format is Pearson
+Sequence 1: 8.A.159_g0_0    73 aa
+Sequence 2: 8.A.159_g0_1    55 aa
+Sequence 3: 8.A.159_g0_2   201 aa
+Sequence 4: 8.A.159_g0_3   383 aa
+Sequence 5: 8.A.159_g0_4    85 aa
+Sequence 6: 8.A.159_g0_5    62 aa
+Sequence 7: 8.A.159_g0_6   730 aa
+Sequence 8: 8.A.159_g0_7   684 aa
+Sequence 9: 8.A.159_g0_8    75 aa
+Start of Pairwise alignments
+Aligning...
+
+Sequences (1:2) Aligned. Score:  9
+Sequences (1:3) Aligned. Score:  23
+Sequences (1:4) Aligned. Score:  8
+Sequences (1:5) Aligned. Score:  9
+Sequences (1:6) Aligned. Score:  9
+Sequences (1:7) Aligned. Score:  13
+Sequences (1:8) Aligned. Score:  16
+Sequences (1:9) Aligned. Score:  6
+Sequences (2:3) Aligned. Score:  5
+Sequences (2:4) Aligned. Score:  12
+Sequences (2:5) Aligned. Score:  9
+Sequences (2:6) Aligned. Score:  54
+Sequences (2:7) Aligned. Score:  9
+Sequences (2:8) Aligned. Score:  18
+Sequences (2:9) Aligned. Score:  10
+Sequences (3:4) Aligned. Score:  13
+Sequences (3:5) Aligned. Score:  15
+Sequences (3:6) Aligned. Score:  6
+Sequences (3:7) Aligned. Score:  16
+Sequences (3:8) Aligned. Score:  13
+Sequences (3:9) Aligned. Score:  6
+Sequences (4:5) Aligned. Score:  24
+Sequences (4:6) Aligned. Score:  9
+Sequences (4:7) Aligned. Score:  14
+Sequences (4:8) Aligned. Score:  11
+Sequences (4:9) Aligned. Score:  9
+Sequences (5:6) Aligned. Score:  12
+Sequences (5:7) Aligned. Score:  14
+Sequences (5:8) Aligned. Score:  18
+Sequences (5:9) Aligned. Score:  8
+Sequences (6:7) Aligned. Score:  19
+Sequences (6:8) Aligned. Score:  12
+Sequences (6:9) Aligned. Score:  6
+Sequences (7:8) Aligned. Score:  7
+Sequences (7:9) Aligned. Score:  14
+Sequences (8:9) Aligned. Score:  10
+Guide tree file created:   [holes\8.A.159_0_holes.dnd]
+
+There are 8 groups
+Start of Multiple Alignment
+
+Aligning...
+Group 1:                     Delayed
+Group 2:                     Delayed
+Group 3: Sequences:   2      Score:913
+Group 4:                     Delayed
+Group 5:                     Delayed
+Group 6:                     Delayed
+Group 7:                     Delayed
+Group 8:                     Delayed
+Alignment Score -2322
+
+CLUSTAL-Alignment file created  [aligns\8.A.159_0_align.aln]
+
