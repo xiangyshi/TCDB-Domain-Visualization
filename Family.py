@@ -364,7 +364,7 @@ class Family:
         for i, idx_set in enumerate(res):
             with open("./holes/" + self.fam_id + "_" + str(i) +  "_holes.fasta", "w") as file:
                 for j, hole in enumerate(idx_set):
-                    file.write(f">{self.fam_id}_g{i}_{j}\n")
+                    file.write(f">{hole.sys_id}_g{i}_{j}\n")
                     file.write(hole.sequence)
                     file.write("\n")
             
