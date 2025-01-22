@@ -362,6 +362,8 @@ class Family:
         
         res = [[holes[i] for i in idx_set] for idx_set in idx_sets]
         for i, idx_set in enumerate(res):
+            if len(idx_set) == 1:
+                continue
             with open("./holes/" + self.fam_id + "_" + str(i) +  "_holes.fasta", "w") as file:
                 for j, hole in enumerate(idx_set):
                     file.write(f">{hole.sys_id}_g{i}_{j}\n")

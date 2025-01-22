@@ -10,16 +10,72 @@ import argparse
 import numpy as np
 from Family import *
 
-def main():
-    parser = argparse.ArgumentParser(description="Extracts domains from given .cdd file.")
-    parser.add_argument("-m", "--merge", type=int, default=1, help="Merge overlapping domain hits.")
-    parser.add_argument("-i", "--input_file", type=str, help="Path of input CDD file.")
-    parser.add_argument("-d", "--debug", type=int, default=0, help="Show debug logs.")
+def parse_arguments():
+    """Parses and validates command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Process protein domains using rpsblast and TCDB-specific proteins."
+    )
+
+    parser.add_argument(
+        "-mod", "--merge-overlapping-domain",
+        type=int,
+        choices=[0, 1],
+        default=1,
+        help="Specify whether to merge overlapping domain hits (1 = merge, 0 = do not merge). Default is 1."
+    )
+
+    parser.add_argument(
+        "-i", "--input_file",
+        type=str,
+        required=True,
+        help="Path to the input CDD file."
+    )
+
+    parser.add_argument(
+        "-d", "--debug",
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help="Enable debug logs (1 = enable, 0 = disable). Default is 0."
+    )
+
+    parser.add_argument(
+        "-t", "--tcids",
+        type=str,
+        default="",
+        help="Comma-separated list of TCID families to process (e.g., 1.A.13,1.C.105). Default is 0. If neither -t and -f selected, all proteins will be processed."
+    )
+
+    parser.add_argument(
+        "-f", "--ftcids",
+        type=str,
+        default="",
+        help="Path to a file containing TCID families to process, one ID per line. If neither -t and -f selected, all proteins will be processed."
+    )
 
     args = parser.parse_args()
-    MERGE = bool(args.merge)
-    INPUT_FILE = args.input_file
-    DEBUG = bool(args.debug)
+
+    # Validate input file
+    if not os.path.isfile(args.input_file):
+        parser.error(f"The input file '{args.input_file}' does not exist.")
+
+    # Validate TCID file if provided
+    if args.ftcids and not os.path.isfile(args.ftcids):
+        parser.error(f"The TCID file '{args.ftcids}' does not exist.")
+
+    return args
+
+def main():
+
+    # Extract argument values
+    args = parse_arguments()
+
+    merge = bool(args.merge_overlapping_domain)
+    input_file = args.input_file
+    debug = bool(args.debug)
+    families = [tcid.strip() for tcid in args.tcids.split(",") if tcid.strip()]
+    fam_file = args.ftcids
+
 
     # Main
     import time
@@ -27,26 +83,45 @@ def main():
     # Calculate the start time
     start = time.time()
 
-
-    clean = get_clean(INPUT_FILE) #TODO Preferablly merge here
+    # Parse CDD File
+    clean = get_clean(input_file)
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
-    # clean = clean[clean['family'] == "1.A.119"]
-    # clean = clean[clean['query acc.'] == '1.A.104.1.1-P76298']
-    # with open(ERROR_FILE, 'w') as file:
-    #     file.write('')
+    valid_famids = clean["family"].unique()
 
-         
-    families = clean['family'].unique()
+    # Parse fam_file
+    if fam_file:
+        with open(fam_file, "r") as file:
+            for line in file:
+                families.append(line.strip())
 
+    # Remove Duplicates
+    families = sorted(families)
+    invalids = set()
+
+    # Validate IDs
+    for famid in families:
+        if famid not in valid_famids:
+            print(f"{famid} is not found, skipping...")
+            invalids.add(famid)
+    
+    families = set(families) - invalids
+    families = sorted(list(families))
+
+    # Check No Select
+    if len(families) == 0:
+        families = valid_famids
+
+    # Process Families
+    print('\n\n\nProcessing Families...\n\n')
     for cnt, fam in enumerate(families):
         curr_fam = Family(clean[clean["family"] == fam], fam)
-        # curr_fam.plot_char()
-        # curr_fam.plot_general()
-        # curr_fam.plot_summary()
-        # curr_fam.plot_holes()
-        # curr_fam.plot_arch()
+        curr_fam.plot_char()
+        curr_fam.plot_general()
+        curr_fam.plot_summary()
+        curr_fam.plot_holes()
+        curr_fam.plot_arch()
         curr_fam.generate_checklist()
-        print(fam, str(round(float(cnt * 100) / len(families), 2)) + "%")
+        print("Processing", fam, str(round(float((cnt + 1) * 100) / len(families), 2)) + "%")
 
     end = time.time()
     print("Process took", int((end - start) // 60), "minutes", int(round(end - start, 0)) % 60, "seconds.")
