@@ -28,7 +28,7 @@ def parse_arguments():
         "-i", "--input_file",
         type=str,
         required=True,
-        help="Path to the input CDD file."
+        help="Required: Path to the input CDD file."
     )
 
     parser.add_argument(
@@ -43,56 +43,48 @@ def parse_arguments():
         "-t", "--tcids",
         type=str,
         default="",
-        help="Comma-separated list of TCID families to process (e.g., 1.A.13,1.C.105). Default is 0. If neither -t and -f selected, all proteins will be processed."
-    )
-
-    parser.add_argument(
-        "-f", "--ftcids",
-        type=str,
-        default="",
-        help="Path to a file containing TCID families to process, one ID per line. If neither -t and -f selected, all proteins will be processed."
+        help="Take in a targeted list of TCIDs to process. \n\nInput can be a file (one family TCID per line), or comma-seperated list (i.e. 1.A.12,1.C.105). Default is all families in cdd file."
     )
 
     args = parser.parse_args()
-
+    isFile = True
     # Validate input file
     if not os.path.isfile(args.input_file):
         parser.error(f"The input file '{args.input_file}' does not exist.")
+    
+    # Check Target isFile
+    if not os.path.isfile(args.tcids):
+        isFile = False
 
-    # Validate TCID file if provided
-    if args.ftcids and not os.path.isfile(args.ftcids):
-        parser.error(f"The TCID file '{args.ftcids}' does not exist.")
-
-    return args
+    return args, isFile
 
 def main():
 
     # Extract argument values
-    args = parse_arguments()
+    args, isfile = parse_arguments()
 
     merge = bool(args.merge_overlapping_domain)
     input_file = args.input_file
     debug = bool(args.debug)
-    families = [tcid.strip() for tcid in args.tcids.split(",") if tcid.strip()]
-    fam_file = args.ftcids
-
-
-    # Main
-    import time
-
-    # Calculate the start time
-    start = time.time()
+    target_ids = args.tcids
+    families = []
 
     # Parse CDD File
     clean = get_clean(input_file)
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     valid_famids = clean["family"].unique()
 
-    # Parse fam_file
-    if fam_file:
-        with open(fam_file, "r") as file:
-            for line in file:
-                families.append(line.strip())
+    if args.tcids:
+        # Parse Targeted TCIDs
+        if isfile:
+            # Parse families file
+            with open(target_ids, "r") as file:
+                for line in file:
+                    families.append(line.strip())
+        else:
+            families = [tcid.strip() for tcid in target_ids.split(",")]
+    else:
+        families = valid_famids
 
     # Remove Duplicates
     families = sorted(families)
@@ -100,9 +92,20 @@ def main():
 
     # Validate IDs
     for famid in families:
+        famid_split = famid.split(".")
+        if len(famid_split) != 3:
+            print(f"{famid} is not a valid family TCID.")
+            continue
+
         if famid not in valid_famids:
             print(f"{famid} is not found, skipping...")
             invalids.add(famid)
+
+    # Main
+    import time
+
+    # Calculate the start time
+    start = time.time()
     
     families = set(families) - invalids
     families = sorted(list(families))
