@@ -1,6 +1,20 @@
-import subprocess
-import platform
-import os
+'''
+Module Name: System.py
+
+Description:
+    This module contains the System class that represents a single protein system
+    within a TCDB family. It manages the protein's domains and inter-domain regions,
+    handling their organization, identification, and analysis.
+
+Dependencies:
+    - pandas: For data manipulation
+    - numpy: For numerical operations
+    - matplotlib: For plotting
+    - Domain: For domain representation
+    - Hole: For inter-domain region representation
+    - util: For utility functions
+'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,40 +27,134 @@ import scipy.stats as stats
 import networkx as nx
 from Family import *
 from Hole import *
+from Domain import *
 import util
 
 class System:
-    def __init__(self, fam_id, sys_id, sys_len, domains, sequence):
+    """
+    A class representing a single protein system and its domain architecture.
+
+    This class manages a protein's domains and inter-domain regions ("holes"),
+    providing methods for their identification and analysis.
+
+    Attributes:
+        fam_id (str): TCDB family identifier
+        sys_id (str): Unique system identifier
+        sys_len (int): Length of the protein sequence
+        domains (list[Domain]): List of Domain objects in order of appearance
+        accession (str): Protein accession number
+        sequence (str): Amino acid sequence
+        holes (list[Hole]): List of inter-domain regions
+    """
+
+    def __init__(self, fam_id, sys_id, sys_len, domains, sequence, accession):
+        """
+        Initialize a System object.
+
+        Args:
+            fam_id (str): TCDB family identifier
+            sys_id (str): Unique system identifier
+            sys_len (int): Length of the protein sequence
+            domains (list): List of domain tuples (start, end, dom_id, bitscore)
+            sequence (str): Amino acid sequence
+            accession (str): Protein accession number
+        """
         self.fam_id = fam_id
         self.sys_id = sys_id
         self.sys_len = sys_len
-        self.domains = domains
+        self.domains = []
+        for dom in domains:
+            self.domains.append(Domain(dom[2], dom[0], dom[1], dom[3], dom[2]))
+        self.accession = accession
         self.sequence = sequence
         self.get_holes()
     
     def check_char(self, char_domains):
+        """
+        Identifies characteristic domains in the system.
+
+        Args:
+            char_domains (list): List of domain IDs considered characteristic
+
+        Returns:
+            bool: True if system contains any characteristic domains
+        """
+        flag = False
         for dom in self.domains:
-            if dom[2] in char_domains:
-                self.has_char = True
-                return
-        self.has_char = False
+            if dom.dom_id in char_domains:
+                dom.type = "char"
+                flag = True
+        return flag
     
     def get_holes(self, thresh=50, margin=10):
+        """
+        Identifies inter-domain regions ("holes") in the system.
+
+        Analyzes the protein sequence to find regions between domains that are
+        longer than the threshold length. For each hole, identifies the flanking
+        domains within the specified margin.
+
+        Args:
+            thresh (int, optional): Minimum length for a region to be considered a hole. 
+                                  Defaults to 50.
+            margin (int, optional): Number of positions to look for flanking domains. 
+                                  Defaults to 10.
+        """
         self.holes = []
         for i, dom in enumerate(self.domains):
-            if dom[-1] == "-1" and dom[1] - dom[0] >= thresh:
-                left_doms, right_doms = util.find_margins(self.domains, dom[0] - margin, dom[1] + margin)
-
+            if dom.type == "hole" and dom.end - dom.start >= thresh:
+                # Find domains within margin distance of hole boundaries
+                left_doms, right_doms = util.find_margins(self.domains, 
+                                                        dom.start - margin, 
+                                                        dom.end + margin)
+                ref_doms = []
                 names = set()
+
+                # Handle cases based on presence of flanking domains
                 if len(left_doms) == 0:
                     for rdom in right_doms:
-                        names.add((None, rdom[-1]))
+                        names.add((None, rdom.dom_id))
+                        ref_doms.append((None, rdom))
                 elif len(right_doms) == 0:
                     for ldom in left_doms:
-                        names.add((ldom[-1], None))
+                        names.add((ldom.dom_id, None))
+                        ref_doms.append((ldom, None))
                 else:
                     for ldom in left_doms:
                         for rdom in right_doms:
-                            names.add((ldom[-1], rdom[-1]))
+                            names.add((ldom.dom_id, rdom.dom_id))
+                            ref_doms.append((ldom, rdom))
 
-                self.holes.append(Hole(self.sys_id.split('-')[0], i, names, dom[0], dom[1], self.sequence[dom[0] - 1: dom[1]]))
+                # Create new Hole object
+                self.holes.append(Hole(self.sys_id.split('-')[0], i, names, 
+                                     ref_doms, dom.start, dom.end, 
+                                     self.sequence[dom.start - 1: dom.end]))
+    
+    def domain_to_list(self):
+        """
+        Converts domain information to list format, excluding holes.
+
+        Returns:
+            list: List of domain tuples (dom_id, start, end, bitscore)
+        """
+        return [dom.to_tuple() for dom in self.domains if dom.type != "hole"]
+
+    def holes_to_list(self):
+        """
+        Converts hole information to list format.
+
+        Returns:
+            list: List of hole tuples (name, start, end)
+        """
+        return [hole.to_tuple() for hole in self.holes]
+
+    def generate_csv_row(self):
+        """
+        Generates a CSV row containing system information.
+
+        Returns:
+            list: [accession, length, family_id, subfamily, domains_list, holes_list]
+        """
+        subfamily = ".".join(self.sys_id.split(".")[:4])
+        return [self.accession, self.sys_len, self.fam_id, subfamily, 
+                str(self.domain_to_list()), str(self.holes_to_list())]
