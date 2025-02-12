@@ -80,8 +80,8 @@ def get_clean(in_file) -> pd.DataFrame:
         return df
     
     except Exception as e:
-        print("An error occurred:", e)
-        return None
+        print("An error occurred during cleaning input/projection file:", e)
+        return pd.DataFrame() # return empty df when error
 
 
 def find_holes(p_length, domain_regions):

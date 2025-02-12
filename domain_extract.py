@@ -62,6 +62,13 @@ def parse_arguments():
         help="Take in a targeted list of TCIDs to process. \n\nInput can be a file (one family TCID per line), or comma-seperated list (i.e. 1.A.12,1.C.105). Default is all families in cdd file."
     )
 
+    parser.add_argument(
+        "-p", "--projection",
+        type=str,
+        default="",
+        help="Additional domains that are rescued through projection based methods. Should be the same format as the input CDD file."
+    )
+
     args = parser.parse_args()
     isFile = True
     # Validate input file
@@ -94,10 +101,15 @@ def main():
     input_file = args.input_file
     debug = bool(args.debug)
     target_ids = args.tcids
+    proj_file = args.projection
     families = []
 
-    # Parse CDD File and extract unique family IDs
+    # Parse CDD File, Projection File, and extract unique family IDs
     clean = get_clean(input_file)
+    if proj_file:
+        proj_clean = get_clean(proj_file)
+        clean = pd.concat([clean, proj_clean], ignore_index=True)
+
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     valid_famids = clean["family"].unique()
 
