@@ -120,7 +120,10 @@ class Family:
         Returns:
             list: Domain hits and inter-domain regions, sorted by position
         '''
-        domains = data[[DOM_START, DOM_END, DOM_ID, BIT_SCORE]].sort_values(DOM_START)
+        try:
+            domains = data[[DOM_START, DOM_END, DOM_ID, BIT_SCORE]].sort_values(DOM_START)
+        except:
+            domains = data[[DOM_START, DOM_END, DOM_ID, E_VALUE]].sort_values(DOM_START)
         domains_loc = np.array(domains[[DOM_START, DOM_END]]).tolist()
         links = util.find_holes(sys_len, domains_loc)
 

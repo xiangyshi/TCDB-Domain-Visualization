@@ -55,7 +55,7 @@ class System:
             fam_id (str): TCDB family identifier
             sys_id (str): Unique system identifier
             sys_len (int): Length of the protein sequence
-            domains (list): List of domain tuples (start, end, dom_id, bitscore)
+            domains (list): List of domain tuples (start, end, dom_id, bitscore/evalue)
             sequence (str): Amino acid sequence
             accession (str): Protein accession number
         """
@@ -64,7 +64,11 @@ class System:
         self.sys_len = sys_len
         self.domains = []
         for dom in domains:
-            self.domains.append(Domain(dom[2], dom[0], dom[1], dom[3], dom[2]))
+            # Check if is rescued domain (only evalue is available)
+            if type(dom[3]) == float:
+                self.domains.append(Domain(dom[2], dom[0], dom[1], -1, dom[2], evalue=dom[3]))
+            else:
+                self.domains.append(Domain(dom[2], dom[0], dom[1], dom[3], dom[2]))
         self.accession = accession
         self.sequence = sequence
         self.get_holes()

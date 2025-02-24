@@ -15,6 +15,8 @@ import numpy as np
 import pandas as pd
 import csv
 from Family import *
+from RescueFamily import *
+from rescue_parser import parse_rescue
 
 def parse_arguments():
     """
@@ -63,10 +65,10 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "-p", "--projection",
+        "-r", "--rescue",
         type=str,
         default="",
-        help="Additional domains that are rescued through projection based methods. Should be the same format as the input CDD file."
+        help="Rescue file to parse."
     )
 
     args = parser.parse_args()
@@ -101,14 +103,10 @@ def main():
     input_file = args.input_file
     debug = bool(args.debug)
     target_ids = args.tcids
-    proj_file = args.projection
     families = []
-
-    # Parse CDD File, Projection File, and extract unique family IDs
+    resc_file = args.rescue
+    # Parse CDD File
     clean = get_clean(input_file)
-    if proj_file:
-        proj_clean = get_clean(proj_file)
-        clean = pd.concat([clean, proj_clean], ignore_index=True)
 
     clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     valid_famids = clean["family"].unique()
@@ -150,7 +148,9 @@ def main():
     families = set(families) - invalids
     families = sorted(list(families))
 
-    # Use all valid families if none were selected
+    rescued_domains = parse_rescue(resc_file)
+    rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
+    # Check No Select
     if len(families) == 0:
         families = valid_famids
 
@@ -158,16 +158,17 @@ def main():
     rows = []
     print('\n\n\nProcessing Families...\n\n')
     for cnt, fam in enumerate(families):
-        curr_fam = Family(clean[clean["family"] == fam], fam)
-        # curr_fam.plot_char()
+        fam_df = clean[clean["family"] == fam]
+        resc_df = rescued_domains[rescued_domains["family"] == fam]
+        curr_fam = Family(fam_df, fam)
+        resc_fam = RescueFamily(resc_df, fam)
+        resc_fam.plot_char_rescue()
+        curr_fam.plot_char()
         # curr_fam.plot_general()
         # curr_fam.plot_summary()
         # curr_fam.plot_holes()
         # curr_fam.plot_arch()
         # curr_fam.generate_checklist()
-        for row in curr_fam.generate_csv_rows():
-            rows.append(row)
-        # Display progress
         print("Processing", fam, str(round(float((cnt + 1) * 100) / len(families), 2)) + "%")
 
     # Write results to CSV file

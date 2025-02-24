@@ -1,3 +1,4 @@
+import numpy as np
 '''
 Module Name: Domain.py
 
@@ -19,7 +20,7 @@ class Domain:
         type (str): Type of region - either "dom" for domain or "hole" for inter-domain region
     """
 
-    def __init__(self, dom_id, start, end, bitscore, type):
+    def __init__(self, dom_id, start, end, bitscore, type, evalue=np.nan):
         """
         Initialize a new Domain instance.
 
@@ -34,6 +35,7 @@ class Domain:
         self.start = start
         self.end = end
         self.bitscore = bitscore
+        self.evalue = evalue
         self.type = "dom" if type != "-1" else "hole"
 
     def to_tuple(self):
