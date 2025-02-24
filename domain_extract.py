@@ -9,6 +9,8 @@ from config import *
 import argparse
 import numpy as np
 from Family import *
+from RescueFamily import *
+from rescue_parser import parse_rescue
 
 def parse_arguments():
     """Parses and validates command-line arguments."""
@@ -53,6 +55,13 @@ def parse_arguments():
         help="Path to a file containing TCID families to process, one ID per line. If neither -t and -f selected, all proteins will be processed."
     )
 
+    parser.add_argument(
+        "-r", "--rescue",
+        type=str,
+        default="",
+        help="Rescue file to parse."
+    )
+
     args = parser.parse_args()
 
     # Validate input file
@@ -75,7 +84,7 @@ def main():
     debug = bool(args.debug)
     families = [tcid.strip() for tcid in args.tcids.split(",") if tcid.strip()]
     fam_file = args.ftcids
-
+    resc_file = args.rescue
 
     # Main
     import time
@@ -107,20 +116,27 @@ def main():
     families = set(families) - invalids
     families = sorted(list(families))
 
+    rescued_domains = parse_rescue(resc_file)
+    rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     # Check No Select
     if len(families) == 0:
         families = valid_famids
 
     # Process Families
     print('\n\n\nProcessing Families...\n\n')
+    print(clean.columns)
     for cnt, fam in enumerate(families):
-        curr_fam = Family(clean[clean["family"] == fam], fam)
-        curr_fam.plot_char()
-        curr_fam.plot_general()
-        curr_fam.plot_summary()
-        curr_fam.plot_holes()
-        curr_fam.plot_arch()
-        curr_fam.generate_checklist()
+        fam_df = clean[clean["family"] == fam]
+        resc_df = rescued_domains[rescued_domains["family"] == fam]
+        curr_fam = Family(fam_df, fam)
+        resc_fam = RescueFamily(resc_df, fam)
+        resc_fam.plot_char_rescue()
+        # curr_fam.plot_char()
+        # curr_fam.plot_general()
+        # curr_fam.plot_summary()
+        # curr_fam.plot_holes()
+        # curr_fam.plot_arch()
+        # curr_fam.generate_checklist()
         print("Processing", fam, str(round(float((cnt + 1) * 100) / len(families), 2)) + "%")
 
     end = time.time()
