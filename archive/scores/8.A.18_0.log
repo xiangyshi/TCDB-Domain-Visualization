@@ -1,0 +1,39 @@
+
+
+
+ CLUSTAL 2.1 Multiple Sequence Alignments
+
+
+Sequence format is Pearson
+Sequence 1: 8.A.18.1.1_g0_0   103 aa
+Sequence 2: 8.A.18.2.1_g0_1   140 aa
+Sequence 3: 8.A.18.2.2_g0_2    88 aa
+Sequence 4: 8.A.18.3.1_g0_3   112 aa
+Sequence 5: 8.A.18.3.2_g0_4   147 aa
+Start of Pairwise alignments
+Aligning...
+
+Sequences (1:2) Aligned. Score:  32
+Sequences (1:3) Aligned. Score:  13
+Sequences (1:4) Aligned. Score:  22
+Sequences (1:5) Aligned. Score:  21
+Sequences (2:3) Aligned. Score:  18
+Sequences (2:4) Aligned. Score:  25
+Sequences (2:5) Aligned. Score:  27
+Sequences (3:4) Aligned. Score:  5
+Sequences (3:5) Aligned. Score:  9
+Sequences (4:5) Aligned. Score:  39
+Guide tree file created:   [holes\8.A.18_0_holes.dnd]
+
+There are 4 groups
+Start of Multiple Alignment
+
+Aligning...
+Group 1: Sequences:   2      Score:1759
+Group 2: Sequences:   3      Score:1271
+Group 3: Sequences:   4      Score:1066
+Group 4:                     Delayed
+Alignment Score 659
+
+CLUSTAL-Alignment file created  [aligns\8.A.18_0_align.aln]
+

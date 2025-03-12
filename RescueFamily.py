@@ -7,7 +7,8 @@ import util
 
 class RescueFamily(Family):
 
-    def __init__(self, rescue_data, fam_id):
+    def __init__(self, rescue_data, summary_data, fam_id):
+        self.domain_priority = []
         super().__init__(rescue_data, fam_id)
     
     def plot_char_rescue(self):

@@ -148,7 +148,7 @@ def main():
     families = set(families) - invalids
     families = sorted(list(families))
 
-    rescued_domains = parse_rescue(resc_file)
+    rescued_domains, rescue_summary = parse_rescue(resc_file)
     rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     # Check No Select
     if len(families) == 0:
@@ -161,7 +161,7 @@ def main():
         fam_df = clean[clean["family"] == fam]
         resc_df = rescued_domains[rescued_domains["family"] == fam]
         curr_fam = Family(fam_df, fam)
-        resc_fam = RescueFamily(resc_df, fam)
+        resc_fam = RescueFamily(resc_df, rescue_summary, fam)
         resc_fam.plot_char_rescue()
         curr_fam.plot_char()
         # curr_fam.plot_general()
