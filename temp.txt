@@ -1,1 +1,0 @@
-rpsblast -db /usr/local/DB/domainDBs/cddDB/cdd -query tcdb-2.A.1.1.1.faa -evalue 1e-3 -outfmt '7 qacc qlen sallacc slen evalue bitscore lengt qstart qend qcovhsp sstart send stitle' -out outFile.cdd
