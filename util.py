@@ -279,3 +279,39 @@ def get_connected_components(n, pair_list):
     connected_components = list(nx.connected_components(G))
     
     return connected_components
+
+def score_domain(domain, protein_length):
+    return (domain.end - domain.start / protein_length) * domain.evalue
+
+def is_overlap(dom1, dom2, df_doms, mutual_overlap=0.2):
+    # Get all systems
+    accessions = df_doms["query acc."].unique()
+    # Check each system
+    for acc in accessions:
+        # Get all domains for current system
+        curr = df_doms[df_doms["query acc."] == acc]
+        dom1_locs = curr[curr["subject accs."] == dom1][["q. start", "q. end"]]
+        dom2_locs = curr[curr["subject accs."] == dom2][["q. start", "q. end"]]
+        # If any significant overlap is found
+        if overlap_helper(dom1_locs, dom2_locs, mutual_overlap):
+            return True
+    return False
+
+def overlap_helper(df1, df2, mutual_overlap):
+    """
+    Checks if any intervals in df1 overlap with any intervals in df2.
+
+    Parameters:
+    df1, df2: DataFrames with "q. start" and "q. end" columns representing intervals.
+
+    Returns:
+    True if there is at least one significant overlapping interval (mutual overlapp over longer domain >= 0.2), otherwise False.
+    """
+    for start1, end1 in df1.itertuples(index=False):
+        for start2, end2 in df2.itertuples(index=False):
+            if start1 <= end2 and start2 <= end1:  # Overlap condition
+                # Overlap region divided by longer domain
+                mutual = (min(end1, end2) - max(start1, start2)) / (max(end1 - start1, end2 - start2))
+                if mutual >= mutual_overlap:
+                    return True
+    return False # no overlap

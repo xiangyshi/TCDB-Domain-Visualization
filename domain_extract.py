@@ -158,12 +158,12 @@ def main():
     rows = []
     print('\n\n\nProcessing Families...\n\n')
     for cnt, fam in enumerate(families):
-        fam_df = clean[clean["family"] == fam]
+        # fam_df = clean[clean["family"] == fam]
         resc_df = rescued_domains[rescued_domains["family"] == fam]
-        curr_fam = Family(fam_df, fam)
+        # curr_fam = Family(fam_df, fam)
         resc_fam = RescueFamily(resc_df, fam)
         resc_fam.plot_char_rescue()
-        curr_fam.plot_char()
+        # rr_fam.plot_char()
         # curr_fam.plot_general()
         # curr_fam.plot_summary()
         # curr_fam.plot_holes()

@@ -8,9 +8,49 @@ import util
 class RescueFamily(Family):
 
     def __init__(self, rescue_data, fam_id):
-        self.domain_priority = []
         super().__init__(rescue_data, fam_id)
+        self.filter_domains()
     
+    def filter_domains(self, mutual_overlap=0.2):
+        for sys in self.systems:
+            filtered_domains = []
+            for dom in sys.domains:
+                # Flag to check if current domain overlaps with any kept domain
+                overlaps = False
+                
+                # Check for overlaps with already filtered domains
+                i = 0
+                while i < len(filtered_domains):
+                    kept = filtered_domains[i]
+                    # Check if domains overlap
+                    if not (dom.end < kept.start or dom.start > kept.end):
+                        # Calculate overlap region
+                        overlap_start = max(dom.start, kept.start)
+                        overlap_end = min(dom.end, kept.end)
+                        overlap_length = overlap_end - overlap_start
+
+                        longer_length = max(dom.end - dom.start, kept.end - kept.start)
+                        
+                        # Only consider as overlapping if overlap is ≥ 20% of longer domain
+                        if overlap_length / longer_length >= mutual_overlap:
+                            overlaps = True
+                            # Compare scores to decide which domain to keep
+                            dom_score = util.score_domain(dom, sys.sys_len)
+                            kept_score = util.score_domain(kept, sys.sys_len)
+                            
+                            if dom_score > kept_score:
+                                # Replace the kept domain with current domain
+                                filtered_domains[i] = dom
+                                break
+                    i += 1
+                
+                # If no overlap found, add the domain to filtered list
+                if not overlaps:
+                    filtered_domains.append(dom)
+            
+            # Update the system's domains with the filtered list
+            sys.domains = filtered_domains
+
     def plot_char_rescue(self):
             svgs = []
             colors = ["green", "orange", "red"]
