@@ -12,12 +12,13 @@ def parse_rescue(path):
         for line in reader:
             print("processing line: ", line)
             if line[0][0] == "#":
-                dom = line[0].split(":")[0][2:]  # line[0] = '# CDD238744:  DirectHits:  13'
-                direct = int(line[0].split(":")[2].strip())  # line[0] = '# CDD238744:  DirectHits:  13'
-                rescue = int(line[1].split(":")[1].strip())  # line[1] = 'Rescued Proteins:  3'
+                # Line = ['# CDD166458:  DirectHits:  9    Rescued Proteins:  2    Prots with Domain in 1.A.12:  11 (100.0% from a total of 11)']
+                dom = line[0].split(":")[0][2:] # domain before first colon
+                print("dom: ", dom)
                 found = 0
-                total = int(line[2].split("of")[1][:-1].strip())  # Last number, removing trailing ")"
-                summary.append([dom, direct, rescue, found, total])
+                total = int(line[0].split("of")[1][:-1].strip()) # total proteins after "of"
+                print("total: ", total)
+                summary.append([dom, found, total])
                 continue
             
             
@@ -44,15 +45,15 @@ def parse_rescue(path):
                 rounds = 1 if "1" in parts[2] else 2 if "2" in parts[2] else 0
                 rows.append([sys_id, sys_len, dom_id, start, end, evalue, rounds])
     for row in summary:
-        row[3] = significant_domain_hits[row[0]]
+        row[1] = significant_domain_hits[row[0]]
 
     # Rescue Dataframe
     df_rows = pd.DataFrame(rows, columns=["query acc.", "query length", "subject accs.", "q. start", "q. end", "evalue", "rescue round"])
     
     # Domain Summary Dataframe
-    df_summary = pd.DataFrame(summary, columns=["domain", "direct hits", "rescued", "found", "total"])
+    df_summary = pd.DataFrame(summary, columns=["domain", "found", "total"])
     df_summary["perc found"] = df_summary["found"] / df_summary["total"]
-    df_summary = df_summary[df_summary["perc found"] >= 0.8].sort_values(["direct hits", "perc found"], ascending=[False, False])
+    df_summary = df_summary[df_summary["perc found"] >= 0.8].sort_values("perc found", ascending=False)
 
     filtered_domains = list(df_summary["domain"])
     # Filter out domains with no overlap

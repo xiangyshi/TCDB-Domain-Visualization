@@ -280,38 +280,41 @@ def get_connected_components(n, pair_list):
     
     return connected_components
 
-def score_domain(domain, protein_length):
-    return (domain.end - domain.start / protein_length) * domain.evalue
+def score_domain(domain, protein_length) -> float:
+    nlog = -np.log(domain.evalue)
+    if np.isnan(nlog):
+        nlog = 1000000
+    return (domain.end - domain.start / protein_length) * nlog
 
 def is_overlap(dom1, dom2, df_doms, mutual_overlap=0.2):
-    # Get all systems
-    accessions = df_doms["query acc."].unique()
-    # Check each system
-    for acc in accessions:
-        # Get all domains for current system
-        curr = df_doms[df_doms["query acc."] == acc]
-        dom1_locs = curr[curr["subject accs."] == dom1][["q. start", "q. end"]]
-        dom2_locs = curr[curr["subject accs."] == dom2][["q. start", "q. end"]]
-        # If any significant overlap is found
-        if overlap_helper(dom1_locs, dom2_locs, mutual_overlap):
-            return True
-    return False
-
-def overlap_helper(df1, df2, mutual_overlap):
     """
-    Checks if any intervals in df1 overlap with any intervals in df2.
+    Given two domains and a dataframe containing their information within a system (protein), check if they are overlapping.
+    Overlapping is defined by the value of mutual_overlap, which is the overlapping region divided by the longer domain.
 
-    Parameters:
-    df1, df2: DataFrames with "q. start" and "q. end" columns representing intervals.
+    Args:
+        dom1 (Domain): The first domain object
+        dom2 (Domain): The second domain object
+        df_doms (pd.DataFrame): DataFrame containing domain information
+        mutual_overlap (float): Minimum required overlap fraction (0 to 1)
 
     Returns:
-    True if there is at least one significant overlapping interval (mutual overlapp over longer domain >= 0.2), otherwise False.
+        bool: True if the domains overlap, False otherwise
     """
-    for start1, end1 in df1.itertuples(index=False):
-        for start2, end2 in df2.itertuples(index=False):
-            if start1 <= end2 and start2 <= end1:  # Overlap condition
-                # Overlap region divided by longer domain
-                mutual = (min(end1, end2) - max(start1, start2)) / (max(end1 - start1, end2 - start2))
-                if mutual >= mutual_overlap:
-                    return True
-    return False # no overlap
+
+    # Calculate the overlap
+    overlap_start = max(dom1.start, dom2.start)
+    overlap_end = min(dom1.end, dom2.end)
+
+    # If there is no overlap
+    if overlap_start >= overlap_end:
+        return False
+
+    # Calculate the lengths of the domains
+    length_dom1 = dom1.end - dom1.start
+    length_dom2 = dom2.end - dom2.start
+
+    # Calculate the mutual overlap
+    overlap_length = overlap_end - overlap_start
+    longer_length = max(length_dom1, length_dom2)
+    # Check if the overlap meets the mutual overlap requirement
+    return (overlap_length / longer_length) >= mutual_overlap
