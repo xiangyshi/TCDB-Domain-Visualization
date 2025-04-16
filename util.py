@@ -315,6 +315,6 @@ def is_overlap(dom1, dom2, df_doms, mutual_overlap=0.2):
 
     # Calculate the mutual overlap
     overlap_length = overlap_end - overlap_start
-    longer_length = max(length_dom1, length_dom2)
+    shorter_length = min(length_dom1, length_dom2)
     # Check if the overlap meets the mutual overlap requirement
-    return (overlap_length / longer_length) >= mutual_overlap
+    return (overlap_length / shorter_length) >= mutual_overlap
