@@ -286,7 +286,7 @@ def score_domain(domain, protein_length) -> float:
         nlog = 1000000
     return (domain.end - domain.start / protein_length) * nlog
 
-def is_overlap(dom1, dom2, df_doms, mutual_overlap=0.2):
+def is_overlap(dom1, dom2, mutual_overlap=0.2):
     """
     Given two domains and a dataframe containing their information within a system (protein), check if they are overlapping.
     Overlapping is defined by the value of mutual_overlap, which is the overlapping region divided by the longer domain.
@@ -294,7 +294,6 @@ def is_overlap(dom1, dom2, df_doms, mutual_overlap=0.2):
     Args:
         dom1 (Domain): The first domain object
         dom2 (Domain): The second domain object
-        df_doms (pd.DataFrame): DataFrame containing domain information
         mutual_overlap (float): Minimum required overlap fraction (0 to 1)
 
     Returns:

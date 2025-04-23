@@ -66,9 +66,15 @@ class System:
         for dom in domains:
             # Check if is rescued domain (only evalue is available)
             if type(dom[3]) == float:
-                self.domains.append(Domain(dom[2], dom[0], dom[1], -1, dom[2], evalue=dom[3]))
+                self.domains.append(Domain(dom[2], dom[0], dom[1], -1, dom[2], (dom[1] - dom[0]) / sys_len, evalue=dom[3]))
             else:
-                self.domains.append(Domain(dom[2], dom[0], dom[1], dom[3], dom[2]))
+                self.domains.append(Domain(dom[2], dom[0], dom[1], dom[3], dom[2], (dom[1] - dom[0]) / sys_len))
+        self.domain_map = {}
+        for dom in self.domains:
+            if dom.type != "hole":
+                if dom.dom_id not in self.domain_map:
+                    self.domain_map[dom.dom_id] = []
+                self.domain_map[dom.dom_id].append(dom)
         self.accession = accession
         self.sequence = sequence
         self.get_holes()

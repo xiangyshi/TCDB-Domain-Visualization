@@ -13,29 +13,31 @@ class RescueFamily(Family):
         self.filter_domains()
     
     def filter_domains(self):
+        votes = {}
         for sys in self.systems:
             # Create a graph
             G = nx.Graph()
 
             sys_domains = [dom for dom in sys.domains if dom.type != "hole"]
             # Add nodes for each domain
-            for i, dom in enumerate(sys_domains):
-                G.add_node(i, domain=dom)
+            for dom in sys_domains:
+                G.add_node(dom.dom_id, domain=dom)
 
             # Add edges for overlapping domains
             for i in range(len(sys_domains)):
                 for j in range(i + 1, len(sys_domains)):
-                    if util.is_overlap(sys_domains[i], sys_domains[j], self.data):
-                        G.add_edge(i, j)
+                    if util.is_overlap(sys_domains[i], sys_domains[j]):
+                        G.add_edge(sys_domains[i].dom_id, sys_domains[j].dom_id)
 
             # Find connected components
             connected_components = list(nx.connected_components(G))
-            print("connected components: ", sys.sys_id, connected_components)
-            # Store the overlapping domains for the system
-            sys.overlapping_domains = [[G.nodes[i]['domain'] for i in component] for component in connected_components]
+
+            # TODO: retain overlapping domain information
+            sys.overlapping_domains = [G.nodes[i]['domain'] for component in connected_components for i in component]
 
             # Select representative domain for each connected component
             sys_new_domains = []
+            print(sys.sys_id, connected_components)
             for component in connected_components:
                 # Select the domain with the highest score
                 max_score = float('-inf')
@@ -50,11 +52,39 @@ class RescueFamily(Family):
                 
                 # Store the representative domain for the component
                 if representative_domain:
-                    print("representative domain: ", component, representative_domain)
                     sys_new_domains.append(representative_domain)
+                    if representative_domain.dom_id not in votes:
+                        votes[representative_domain.dom_id] = 0
+                    votes[representative_domain.dom_id] += 1
             sys.domains = sys_new_domains
+        
+        # Sort the votes
+        sorted_votes = sorted(votes.items(), key=lambda x: x[1], reverse=True)
+        scores = {key: 0 for key in votes.keys()}
+        # Determine best domain for family
+        for sys in self.systems:
+            for dom in sys.overlapping_domains:
+                for rep_dom, value in sorted_votes:
+                    if dom.dom_id == rep_dom:
+                        scores[dom.dom_id] += value * dom.coverage
+        print(scores)
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
-    def plot_char_rescue(self):
+        self.plot_char_rescue("before")
+        # Replace domains with best domain
+        for sys in self.systems:
+            for i, dom in enumerate(sys.domains):
+                for best_dom, score in sorted_scores:
+                    if dom.dom_id == best_dom:
+                        break
+                    curr_bests = sys.domain_map[best_dom]
+                    for curr_best in curr_bests:
+                        if util.is_overlap(dom, curr_best):
+                            sys.domains[i] = curr_best
+                            break
+        self.plot_char_rescue("after")
+        
+    def plot_char_rescue(self, label=""):
             svgs = []
             colors = ["green", "orange", "red"]
             for i, sys in enumerate(self.systems):
@@ -92,4 +122,4 @@ class RescueFamily(Family):
                 svgs.append(svg_file)
 
                 plt.close(fig)  # Close the figure to avoid memory issues
-            util.combine_svgs(svgs, '/resc/' + self.fam_id + "-resc.html")
+            util.combine_svgs(svgs, '/resc/' + self.fam_id + "-resc" + label + ".html")

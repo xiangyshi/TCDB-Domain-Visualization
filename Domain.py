@@ -20,7 +20,7 @@ class Domain:
         type (str): Type of region - either "dom" for domain or "hole" for inter-domain region
     """
 
-    def __init__(self, dom_id, start, end, bitscore, type, evalue=np.nan):
+    def __init__(self, dom_id, start, end, bitscore, type, coverage, evalue=np.nan):
         """
         Initialize a new Domain instance.
 
@@ -37,6 +37,7 @@ class Domain:
         self.bitscore = bitscore
         self.evalue = evalue
         self.type = "dom" if type != "-1" else "hole"
+        self.coverage = coverage
 
     def to_tuple(self):
         """

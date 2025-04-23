@@ -1,4 +1,5 @@
 singles.cdd
-plots/
-rescued/
-sequences/
+__pycache__/*
+plots/*
+rescued/*
+sequences/*
