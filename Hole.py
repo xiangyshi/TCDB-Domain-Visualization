@@ -47,6 +47,9 @@ class Hole:
         self.sequence = sequence
         self.best_name = self.get_best_name()
 
+    def __repr__(self):
+        return " ".join([self.sys_id, str(self.start), str(self.end), str(self.best_name)])
+
     def to_tuple(self):
         """
         Convert hole information to a tuple format.

@@ -281,9 +281,14 @@ def get_connected_components(n, pair_list):
     return connected_components
 
 def score_domain(domain, protein_length) -> float:
-    nlog = -np.log(domain.evalue)
-    if np.isnan(nlog):
+    # suppress divide by zero warnings
+    with np.errstate(divide='ignore'):
+        nlog = -np.log(domain.evalue)
+        
+    # Handle inf values when evalue is 0
+    if np.isinf(nlog) or np.isnan(nlog):
         nlog = 1000000
+        
     return (domain.end - domain.start / protein_length) * nlog
 
 def is_overlap(dom1, dom2, mutual_overlap=0.2):

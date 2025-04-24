@@ -39,11 +39,14 @@ class Domain:
         self.type = "dom" if type != "-1" else "hole"
         self.coverage = coverage
 
+    def __repr__(self):
+        return f"Domain(dom_id={self.dom_id}, start={self.start}, end={self.end}, type={self.type})"
+
     def to_tuple(self):
         """
         Convert domain information to a tuple format.
 
         Returns:
-            tuple: Contains (dom_id, start, end, bitscore)
+            tuple: Contains (dom_id, start, end, evalue)
         """
-        return (self.dom_id, self.start, self.end, self.bitscore)
+        return (self.dom_id, self.start, self.end, self.evalue)

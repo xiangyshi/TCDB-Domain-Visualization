@@ -95,7 +95,50 @@ class System:
                 dom.type = "char"
                 flag = True
         return flag
-    
+
+    def fill_holes(self):
+        # Filter out existing holes and sort domains by start position
+        non_hole_domains = [dom for dom in self.domains if dom.type != "hole"]
+        sorted_domains = sorted(non_hole_domains, key=lambda x: x.start)
+        
+        # Create a new list for all domains including holes
+        new_domains = []
+        
+        # Check for gap at the beginning
+        if not sorted_domains or sorted_domains[0].start > 0:
+            start = 0
+            end = sorted_domains[0].start - 1 if sorted_domains else self.sys_len - 1
+            hole = Domain("-1", start, end, -1, "-1", (end - start) / self.sys_len)
+            new_domains.append(hole)
+        
+        # Add first domain
+        if sorted_domains:
+            new_domains.append(sorted_domains[0])
+        
+        # Check for gaps between domains
+        for i in range(1, len(sorted_domains)):
+            prev_end = sorted_domains[i-1].end
+            curr_start = sorted_domains[i].start
+            
+            # If there's a gap between the domains
+            if prev_end + 1 < curr_start:
+                hole = Domain("-1", prev_end + 1, curr_start - 1, -1, "-1", 
+                             (curr_start - prev_end - 1) / self.sys_len)
+                new_domains.append(hole)
+            
+            # Add current domain
+            new_domains.append(sorted_domains[i])
+        
+        # Check for gap at the end
+        if sorted_domains and sorted_domains[-1].end < self.sys_len - 1:
+            start = sorted_domains[-1].end + 1
+            end = self.sys_len - 1
+            hole = Domain("-1", start, end, -1, "-1", (end - start) / self.sys_len)
+            new_domains.append(hole)
+        
+        # Update domains
+        self.domains = new_domains
+
     def get_holes(self, thresh=50, margin=10):
         """
         Identifies inter-domain regions ("holes") in the system.

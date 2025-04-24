@@ -1,23 +1,31 @@
 import csv
+import os
 import pandas as pd
 import numpy as np
 from util import is_overlap
 
 def parse_rescue(path):
+    # Validate path
+    if not os.path.exists(path):
+        parse_path = f"rescued/{path}_rescuedDomains.tsv"
+        if not os.path.exists(parse_path):
+            raise FileNotFoundError(f"Rescue file not found at path: {path} or {parse_path}")
+        path = parse_path
+    
+    if not os.path.isfile(path):
+        raise ValueError(f"The specified path is not a file: {path}")
+    
     rows = []
     summary = []
     significant_domain_hits = {}
     with open(path, "r") as file:
         reader = csv.reader(file, delimiter='\t')
         for line in reader:
-            print("processing line: ", line)
             if line[0][0] == "#":
                 # Line = ['# CDD166458:  DirectHits:  9    Rescued Proteins:  2    Prots with Domain in 1.A.12:  11 (100.0% from a total of 11)']
                 dom = line[0].split(":")[0][2:] # domain before first colon
-                print("dom: ", dom)
                 found = 0
                 total = int(line[0].split("of")[1][:-1].strip()) # total proteins after "of"
-                print("total: ", total)
                 summary.append([dom, found, total])
                 continue
             
@@ -45,7 +53,10 @@ def parse_rescue(path):
                 rounds = 1 if "1" in parts[2] else 2 if "2" in parts[2] else 0
                 rows.append([sys_id, sys_len, dom_id, start, end, evalue, rounds])
     for row in summary:
-        row[1] = significant_domain_hits[row[0]]
+        try:
+            row[1] = significant_domain_hits[row[0]]
+        except KeyError:
+            continue
 
     # Rescue Dataframe
     df_rows = pd.DataFrame(rows, columns=["query acc.", "query length", "subject accs.", "q. start", "q. end", "evalue", "rescue round"])

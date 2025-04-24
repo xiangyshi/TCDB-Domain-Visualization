@@ -64,13 +64,6 @@ def parse_arguments():
         help="Take in a targeted list of TCIDs to process. \n\nInput can be a file (one family TCID per line), or comma-seperated list (i.e. 1.A.12,1.C.105). Default is all families in cdd file."
     )
 
-    parser.add_argument(
-        "-r", "--rescue",
-        type=str,
-        default="",
-        help="Rescue file to parse."
-    )
-
     args = parser.parse_args()
     isFile = True
     # Validate input file
@@ -79,6 +72,7 @@ def parse_arguments():
     
     # Check Target isFile
     if not os.path.isfile(args.tcids):
+        print(f"The argument -t/--tcids is not a file: {args.tcids}")
         isFile = False
 
     return args, isFile
@@ -104,7 +98,6 @@ def main():
     debug = bool(args.debug)
     target_ids = args.tcids
     families = []
-    resc_file = args.rescue
     # Parse CDD File
     clean = get_clean(input_file)
 
@@ -148,8 +141,6 @@ def main():
     families = set(families) - invalids
     families = sorted(list(families))
 
-    rescued_domains = parse_rescue(resc_file)
-    rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
     # Check No Select
     if len(families) == 0:
         families = valid_famids
@@ -158,18 +149,27 @@ def main():
     rows = []
     print('\n\n\nProcessing Families...\n\n')
     for cnt, fam in enumerate(families):
+        print("Processing", fam, str(round(float((cnt) * 100) / len(families), 2)) + "%")
+        try:
+            rescued_domains = parse_rescue(fam)
+        except Exception as e:
+            print(f"Error parsing rescue for {fam}: {e}")
+            continue
+        rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
         # fam_df = clean[clean["family"] == fam]
         resc_df = rescued_domains[rescued_domains["family"] == fam]
         # curr_fam = Family(fam_df, fam)
         resc_fam = RescueFamily(resc_df, fam)
-        resc_fam.plot_char_rescue()
+        # resc_fam.plot_char_rescue()
         # rr_fam.plot_char()
         # curr_fam.plot_general()
         # curr_fam.plot_summary()
         # curr_fam.plot_holes()
         # curr_fam.plot_arch()
         # curr_fam.generate_checklist()
-        print("Processing", fam, str(round(float((cnt + 1) * 100) / len(families), 2)) + "%")
+
+        fam_rows = resc_fam.generate_csv_rows()
+        rows += fam_rows
 
     # Write results to CSV file
     with open("output.csv", "w") as file:

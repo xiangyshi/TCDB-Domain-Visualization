@@ -11,6 +11,7 @@ class RescueFamily(Family):
     def __init__(self, rescue_data, fam_id):
         super().__init__(rescue_data, fam_id)
         self.filter_domains()
+        
     
     def filter_domains(self):
         votes = {}
@@ -37,7 +38,6 @@ class RescueFamily(Family):
 
             # Select representative domain for each connected component
             sys_new_domains = []
-            print(sys.sys_id, connected_components)
             for component in connected_components:
                 # Select the domain with the highest score
                 max_score = float('-inf')
@@ -67,28 +67,31 @@ class RescueFamily(Family):
                 for rep_dom, value in sorted_votes:
                     if dom.dom_id == rep_dom:
                         scores[dom.dom_id] += value * dom.coverage
-        print(scores)
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-        self.plot_char_rescue("before")
         # Replace domains with best domain
         for sys in self.systems:
             for i, dom in enumerate(sys.domains):
                 for best_dom, score in sorted_scores:
                     if dom.dom_id == best_dom:
                         break
-                    curr_bests = sys.domain_map[best_dom]
+                    try:
+                        curr_bests = sys.domain_map[best_dom]
+                    except KeyError:
+                        print(f"KeyError for {best_dom} in {sys.sys_id}")
+                        continue
                     for curr_best in curr_bests:
                         if util.is_overlap(dom, curr_best):
                             sys.domains[i] = curr_best
                             break
-        self.plot_char_rescue("after")
+        for sys in self.systems:
+            sys.fill_holes()
+            sys.get_holes()
         
     def plot_char_rescue(self, label=""):
             svgs = []
             colors = ["green", "orange", "red"]
             for i, sys in enumerate(self.systems):
-                sys_doms = sys.domains
+                sys_doms = [dom for dom in sys.domains if dom.type != "hole"]
                 fig, ax = plt.subplots(figsize=(16, 0.3 * (len(sys_doms) + 2)))  # Adjust size as needed
                 
                 ax.set_title(sys.sys_id)
