@@ -24,7 +24,7 @@ from collections import Counter
 from config import *
 import scipy.stats as stats
 from System import *
-import util
+import utility.util as util
 
 class Family:
     '''

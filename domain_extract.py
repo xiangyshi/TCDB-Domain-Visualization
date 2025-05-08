@@ -8,7 +8,9 @@ It analyzes domain data from CDD files and generates domain architecture analysi
 for specified protein families.
 '''
 
-from util import *
+from utility.util import *
+from utility.cdd_parser import clean_cdd
+from utility.rescue_parser import clean_rescue
 from config import *
 import argparse
 import numpy as np
@@ -16,7 +18,6 @@ import pandas as pd
 import csv
 from Family import *
 from RescueFamily import *
-from rescue_parser import parse_rescue
 
 def parse_arguments():
     """
@@ -35,18 +36,24 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "-mod", "--merge-overlapping-domain",
+        "-m", "--merge-overlapping-domain",
         type=int,
         choices=[0, 1],
         default=1,
         help="Specify whether to merge overlapping domain hits (1 = merge, 0 = do not merge). Default is 1."
     )
 
-    parser.add_argument(
-        "-i", "--input_file",
+    # Create a mutually exclusive group for input types
+    input_group = parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument(
+        "-c", "--cdd_input",
         type=str,
-        required=True,
-        help="Required: Path to the input CDD file."
+        help="Path to the input CDD file. Cannot be used with --rescue_input."
+    )
+    input_group.add_argument(
+        "-r", "--rescue_input",
+        type=str,
+        help="Path to folder containing rescue files. Cannot be used with --cdd_input."
     )
 
     parser.add_argument(
@@ -61,14 +68,17 @@ def parse_arguments():
         "-t", "--tcids",
         type=str,
         default="",
-        help="Take in a targeted list of TCIDs to process. \n\nInput can be a file (one family TCID per line), or comma-seperated list (i.e. 1.A.12,1.C.105). Default is all families in cdd file."
+        help="Take in a targeted list of TCIDs to process. \n\nInput can be a file (one family TCID per line), or comma-seperated list (i.e. 1.A.12,1.C.105). If not provided, all families in cdd file / rescue folder will be processed."
     )
 
     args = parser.parse_args()
     isFile = True
-    # Validate input file
-    if not os.path.isfile(args.input_file):
-        parser.error(f"The input file '{args.input_file}' does not exist.")
+    
+    # Validate input file/directory
+    if args.cdd_input and not os.path.isfile(args.cdd_input):
+        parser.error(f"The CDD input file '{args.cdd_input}' does not exist.")
+    if args.rescue_input and not os.path.isdir(args.rescue_input):
+        parser.error(f"The rescue input path '{args.rescue_input}' is not a directory.")
     
     # Check Target isFile
     if not os.path.isfile(args.tcids):
@@ -83,7 +93,7 @@ def main():
     
     Workflow:
     1. Parses command-line arguments
-    2. Reads and cleans CDD file data
+    2. Reads and cleans CDD file data or processes rescue IDs
     3. Processes target TCIDs (either from file, comma-separated list, or all)
     4. Validates family IDs
     5. Processes each family to generate domain architecture analysis
@@ -94,85 +104,56 @@ def main():
 
     # Configuration settings from arguments
     merge = bool(args.merge_overlapping_domain)
-    input_file = args.input_file
-    debug = bool(args.debug)
-    target_ids = args.tcids
-    families = []
-    # Parse CDD File
-    clean = get_clean(input_file)
 
-    clean['family'] = clean['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
-    valid_famids = clean["family"].unique()
+    process_fam_ids = set()
 
     # Process target TCIDs based on input method
     if args.tcids:
         if isfile:
             # Read families from file (one per line)
-            with open(target_ids, "r") as file:
+            with open(args.tcid, "r") as file:
                 for line in file:
-                    families.append(line.strip())
+                    process_fam_ids.add(line.strip())
         else:
             # Parse comma-separated list of TCIDs
-            families = [tcid.strip() for tcid in target_ids.split(",")]
+            process_fam_ids = [tcid.strip() for tcid in args.tcids.split(",")]
+
+    # Parse input based on which input was provided
+    if args.cdd_input:
+        # CDD file mode
+        family_data = clean_cdd(args.cdd_input, process_fam_ids)
     else:
-        # Use all families from CDD file if no targets specified
-        families = valid_famids
-
-    # Remove duplicates and sort families
-    families = sorted(families)
-    invalids = set()
-
-    # Validate family IDs format and existence
-    for famid in families:
-        famid_split = famid.split(".")
-        if len(famid_split) != 3:
-            print(f"{famid} is not a valid family TCID.")
-            continue
-
-        if famid not in valid_famids:
-            print(f"{famid} is not found, skipping...")
-            invalids.add(famid)
+        family_data = clean_rescue(args.rescue_input, process_fam_ids)
 
     # Track execution time
     import time
     start = time.time()
     
-    # Remove invalid families and sort
-    families = set(families) - invalids
-    families = sorted(list(families))
-
-    # Check No Select
-    if len(families) == 0:
-        families = valid_famids
+    unique_fam_ids = family_data['family'].unique()
 
     # Process each family and generate output rows
     rows = []
+    print(family_data)
     print('\n\n\nProcessing Families...\n\n')
-    for cnt, fam in enumerate(families):
-        print("Processing", fam, str(round(float((cnt) * 100) / len(families), 2)) + "%")
-        try:
-            rescued_domains = parse_rescue(fam)
-        except Exception as e:
-            print(f"Error parsing rescue for {fam}: {e}")
-            continue
-        rescued_domains['family'] = rescued_domains['query acc.'].apply(lambda x: '.'.join(x.split(".")[:3]))
-        # fam_df = clean[clean["family"] == fam]
-        resc_df = rescued_domains[rescued_domains["family"] == fam]
-        # curr_fam = Family(fam_df, fam)
-        resc_fam = RescueFamily(resc_df, fam)
-        # resc_fam.plot_char_rescue()
-        # rr_fam.plot_char()
-        # curr_fam.plot_general()
-        # curr_fam.plot_summary()
-        # curr_fam.plot_holes()
-        # curr_fam.plot_arch()
-        # curr_fam.generate_checklist()
 
-        fam_rows = resc_fam.generate_csv_rows()
-        rows += fam_rows
+    for cnt, fam in enumerate(unique_fam_ids):
+        if args.rescue_input:
+            curr_fam = RescueFamily(family_data[family_data['family'] == fam], fam)
+            curr_fam.plot_char_rescue()
+        else:
+            curr_fam = Family(family_data[family_data['family'] == fam], fam)
+            curr_fam.plot_general()
+            curr_fam.plot_char()
+            curr_fam.plot_arch()
+            curr_fam.plot_holes()
+            curr_fam.plot_summary()
+        curr_data = curr_fam.generate_csv_rows()
+        rows += curr_data
+        print("Processing", fam, str(round(float((cnt) * 100) / len(unique_fam_ids), 2)) + "%")
 
+    
     # Write results to CSV file
-    with open("output.csv", "w") as file:
+    with open("training_data.csv", "w") as file:
         writer = csv.writer(file, lineterminator='\n')
         writer.writerow(["Accession", "Length", "Family", "Subfamily", "Domains", "Seperators"])
         writer.writerows(rows)

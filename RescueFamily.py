@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from config import *
 from Family import Family
-import util
+import utility.util as util
 import networkx as nx
 
 class RescueFamily(Family):

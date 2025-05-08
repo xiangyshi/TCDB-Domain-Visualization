@@ -28,7 +28,7 @@ import networkx as nx
 from Family import *
 from Hole import *
 from Domain import *
-import util
+import utility.util as util
 
 class System:
     """

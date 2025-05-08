@@ -15,73 +15,14 @@ Dependencies:
     - networkx: For graph operations
     - config: For configuration settings
 '''
-import subprocess
-import platform
+
 import os
-import pandas as pd
+
 import numpy as np
-from collections import Counter
 from config import *
 import scipy.stats as stats
 import networkx as nx
 from Domain import *
-
-def get_clean(in_file) -> pd.DataFrame:
-    """
-    Cleans CDD output data by removing comments and extracting relevant fields.
-
-    Executes system-specific cleaning commands and converts the output into
-    a structured DataFrame format.
-
-    Args:
-        in_file (str): Path to input CDD file
-
-    Returns:
-        pd.DataFrame: Cleaned data with extracted fields as columns
-
-    Raises:
-        ValueError: If Fields header is not found in input file
-        Exception: If cleaning command fails
-    """
-
-    # Adjust command pipeline based on machine architecture
-    arch = platform.system()
-    CLEAN_COMMAND = UNIX_CLEAN_COMMAND
-    if arch == 'Windows':
-        CLEAN_COMMAND = WIN_CLEAN_COMMAND
-    
-    # Append input_file path
-    CLEAN_COMMAND += [in_file]
-
-    try:
-        # Obtain column headers
-        header = None
-        with open(in_file, 'r') as input_file:
-            for line in input_file:
-                if line.startswith("# Fields:"):
-                    header = line.strip().replace("# Fields: ", "")  # Extract and clean the header line
-                    break  # Exit after finding the header
-        if not header:
-            raise ValueError("Fields header not found in the input file.")
-        
-        # Run the CLEAN command
-        clean_process = subprocess.run(CLEAN_COMMAND, capture_output=True, text=True)
-        if clean_process.returncode != 0:
-            raise Exception(f"Error in CLEAN command: {clean_process.stderr}")
-
-        # Convert output to DataFrame
-        from io import StringIO
-        cleaned_data = StringIO(clean_process.stdout)
-        df = pd.read_csv(cleaned_data, sep='\t', header=None)
-
-        # Set column names
-        df.columns = header.split(", ")
-
-        return df
-    
-    except Exception as e:
-        print("An error occurred during cleaning input/projection file:", e)
-        return pd.DataFrame() # return empty df when error
 
 
 def find_holes(p_length, domain_regions):

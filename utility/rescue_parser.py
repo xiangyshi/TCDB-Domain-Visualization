@@ -2,16 +2,18 @@ import csv
 import os
 import pandas as pd
 import numpy as np
-from util import is_overlap
+from utility.util import is_overlap
 
 def parse_rescue(path):
-    # Validate path
-    if not os.path.exists(path):
-        parse_path = f"rescued/{path}_rescuedDomains.tsv"
-        if not os.path.exists(parse_path):
-            raise FileNotFoundError(f"Rescue file not found at path: {path} or {parse_path}")
-        path = parse_path
+    """
+    Parse a single rescue file and return its domain data.
     
+    Args:
+        path (str): Path to a single rescue file
+        
+    Returns:
+        pd.DataFrame: DataFrame containing domain data from the rescue file
+    """
     if not os.path.isfile(path):
         raise ValueError(f"The specified path is not a file: {path}")
     
@@ -28,7 +30,6 @@ def parse_rescue(path):
                 total = int(line[0].split("of")[1][:-1].strip()) # total proteins after "of"
                 summary.append([dom, found, total])
                 continue
-            
             
             sys_id, sys_len = line[1].split(":")
             sys_len = int(sys_len)
@@ -52,6 +53,7 @@ def parse_rescue(path):
                 evalue = float(parts[1].split(":")[1])
                 rounds = 1 if "1" in parts[2] else 2 if "2" in parts[2] else 0
                 rows.append([sys_id, sys_len, dom_id, start, end, evalue, rounds])
+    
     for row in summary:
         try:
             row[1] = significant_domain_hits[row[0]]
@@ -69,4 +71,46 @@ def parse_rescue(path):
     filtered_domains = list(df_summary["domain"])
     # Filter out domains with no overlap
     df_rows = df_rows[df_rows["subject accs."].isin(filtered_domains)]
+    df_rows["family"] = df_rows["query acc."].apply(lambda x: '.'.join(x.split(".")[:3]))
+    
     return df_rows
+
+def clean_rescue(folder_path, target_fam_ids=None):
+    """
+    Process all rescue files in a folder and return a concatenated DataFrame.
+    
+    Args:
+        folder_path (str): Path to folder containing rescue files
+        target_fam_ids (list, optional): List of family IDs to process. If None, process all families.
+        
+    Returns:
+        pd.DataFrame: DataFrame with all domain data from rescue files
+    """
+    if not os.path.isdir(folder_path):
+        raise ValueError(f"The specified path is not a directory: {folder_path}")
+    
+    all_dfs = []
+    
+    # Process each rescue file in the folder
+    for file in os.listdir(folder_path):
+        if file.endswith("_rescuedDomains.tsv"):
+            fam_id = file.split("_")[0]  # Extract family ID from filename
+            
+            # Skip if not in target families
+            if target_fam_ids and fam_id not in target_fam_ids:
+                continue
+                
+            try:
+                file_path = os.path.join(folder_path, file)
+                df = parse_rescue(file_path)
+                if not df.empty:
+                    all_dfs.append(df)
+            except Exception as e:
+                print(f"Error processing {file}: {e}")
+                continue
+    
+    # Concatenate all DataFrames
+    if all_dfs:
+        return pd.concat(all_dfs, ignore_index=True)
+    else:
+        return pd.DataFrame()
