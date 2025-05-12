@@ -1,0 +1,9 @@
+# CDD223833:  DirectHits:  5    Rescued Proteins:  2    Prots with Domain in 9.A.4:  7 (100.0% from a total of 7)
+# CDD426721:  DirectHits:  6    Rescued Proteins:  0    Prots with Domain in 9.A.4:  6 (85.7% from a total of 7)
+1	9.A.4.1.1-P52059:185	CDD426721|9-78:9.33e-11|109-173:4.56e-11|DirectHit	CDD223833|90-184:9.88e-11|DirectHit
+2	9.A.4.1.2-P64564:188	CDD426721|9-78:4.73e-11|101-167:3.24e-09|DirectHit	CDD223833|85-174:8.93e-11|DirectHit
+3	9.A.4.2.1-Q81WE1:87	CDD426721|10-75:3.78e-16|DirectHit	CDD223833|5-87:1.52e-15|DirectHit
+4	9.A.4.2.2-M2WYR6:181	CDD426721|95-165:5.38e-14|DirectHit	CDD223833|99-176:1.49e-09|DirectHit
+5	9.A.4.2.3-M2WX31:157	CDD426721|65-128:9.15e-18|DirectHit	CDD223833|62-128:3.87e-13|DirectHit
+6	9.A.4.2.4-S6A3A3:193	CDD426721|10-77:4.33e-07|DirectHit	CDD223833|11-78:4.9e-14|Rescued1
+7	9.A.4.3.1-Q73GS7:992	CDD426721|Nohit	CDD223833|709-797:0.0038|Rescued2

@@ -1,0 +1,12 @@
+# CDD411593:  DirectHits:  4    Rescued Proteins:  5    Prots with Domain in 1.C.20:  9 (100.0% from a total of 9)
+# CDD110996:  DirectHits:  4    Rescued Proteins:  5    Prots with Domain in 1.C.20:  9 (100.0% from a total of 9)
+# CDD274753:  DirectHits:  5    Rescued Proteins:  4    Prots with Domain in 1.C.20:  9 (100.0% from a total of 9)
+1	1.C.20.1.1-P13068:57	CDD274753|1-50:8.75e-12|DirectHit	CDD411593|6-39:1.5e-09|Rescued1	CDD110996|6-39:1.3e-09|Rescued1
+2	1.C.20.1.2-P21838:52	CDD274753|6-52:1.68e-14|DirectHit	CDD411593|2-52:9.96e-09|DirectHit	CDD110996|1-52:2.52e-25|DirectHit
+3	1.C.20.1.4-P80666:22	CDD274753|1-22:1.5e-18|Rescued1	CDD411593|1-22:4.03e-09|DirectHit	CDD110996|1-22:3.76e-08|DirectHit
+4	1.C.20.1.5-P10946:56	CDD274753|2-51:5.85e-12|DirectHit	CDD411593|3-43:2.2e-07|Rescued1	CDD110996|3-43:7.4e-08|Rescued1
+5	1.C.20.1.6-P08136:52	CDD274753|6-52:4.62e-14|DirectHit	CDD411593|2-52:4.38e-09|DirectHit	CDD110996|1-52:2.06e-26|DirectHit
+6	1.C.20.1.8-O68586:63	CDD274753|19-63:4.47e-12|DirectHit	CDD411593|1-63:5.86e-35|DirectHit	CDD110996|12-63:1.75e-26|DirectHit
+7	1.C.20.2.1-P19578:60	CDD274753|5-53:0.0046|Rescued1	CDD411593|1-42:0.002|Rescued1	CDD110996|1-42:0.0014|Rescued1
+8	1.C.20.2.2-Q57312:55	CDD274753|1-51:0.00081|Rescued1	CDD411593|2-41:1.3e-06|Rescued2	CDD110996|2-41:2e-06|Rescued2
+9	1.C.20.2.3-WWQ01948:55	CDD274753|1-50:1.5e-05|Rescued2	CDD411593|2-38:9.8e-07|Rescued2	CDD110996|2-38:1.6e-06|Rescued2

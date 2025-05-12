@@ -1,0 +1,13 @@
+# CDD227153:  DirectHits:  3    Rescued Proteins:  1    Prots with Domain in 1.S.2:  4 (80.0% from a total of 5)
+# CDD132884:  DirectHits:  4    Rescued Proteins:  0    Prots with Domain in 1.S.2:  4 (80.0% from a total of 5)
+# CDD185313:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 1.S.2:  5 (100.0% from a total of 5)
+# CDD132889:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 1.S.2:  5 (100.0% from a total of 5)
+# CDD425954:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 1.S.2:  5 (100.0% from a total of 5)
+# CDD197945:  DirectHits:  4    Rescued Proteins:  0    Prots with Domain in 1.S.2:  4 (80.0% from a total of 5)
+# CDD132887:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 1.S.2:  5 (100.0% from a total of 5)
+# CDD185303:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 1.S.2:  5 (100.0% from a total of 5)
+1	1.S.2.1.1-P76541:219	CDD185313|16-200:3.36e-12|DirectHit	CDD425954|36-110:2.71e-04|DirectHit	CDD197945|150-211:2.10e-05|DirectHit	CDD132884|152-207:6.94e-04|DirectHit	CDD185303|2-218:7.66e-134|DirectHit	CDD132889|11-113:2.46e-56|DirectHit	CDD132887|16-119:4.58e-06|DirectHit	CDD227153|1-219:2.41e-117|DirectHit
+2	1.S.2.1.2-C0Q1N6:270	CDD185313|2-270:0.0|DirectHit	CDD425954|80-150:6.20e-07|186-260:2.09e-12|DirectHit	CDD197945|80-153:3.89e-10|186-255:9.16e-12|DirectHit	CDD132884|80-148:1.49e-05|186-251:3.70e-09|DirectHit	CDD185303|60-226:9.56e-16|DirectHit	CDD132889|60-149:4.55e-07|DirectHit	CDD132887|46-179:5.11e-79|DirectHit	CDD227153|43-266:1.70e-97|DirectHit
+3	1.S.2.1.3-3IO0_A:230	CDD185313|1-228:6.38e-137|DirectHit	CDD425954|39-105:2.75e-06|145-211:5.49e-10|DirectHit	CDD197945|39-105:1.18e-07|145-215:8.33e-11|DirectHit	CDD132884|39-105:3.28e-04|DirectHit	CDD185303|19-179:1.48e-06|DirectHit	CDD132889|15-108:9.9e-28|Rescued1	CDD132887|5-138:1.99e-62|DirectHit	CDD227153|4-222:1.30e-50|DirectHit
+4	1.S.2.2.1-WP_063040943:286	CDD185313|64-175:1.3e-08|Rescued1	CDD425954|73-146:0.0084|Rescued1	CDD197945|Nohit	CDD132884|Nohit	CDD185303|38-175:1.2e-08|Rescued1	CDD132889|64-150:0.00035|Rescued1	CDD132887|64-156:7.3e-06|Rescued1	CDD227153|38-175:1.5e-08|Rescued1
+5	1.S.2.3.1-AAD39019:116	CDD185313|21-104:5.77e-04|DirectHit	CDD425954|45-96:1.20e-11|DirectHit	CDD197945|45-115:2.41e-14|DirectHit	CDD132884|45-102:7.43e-13|DirectHit	CDD185303|19-72:9.78e-05|DirectHit	CDD132889|20-72:1.59e-05|DirectHit	CDD132887|21-105:3.2e-06|Rescued1	CDD227153|Nohit

@@ -1,0 +1,9 @@
+# CDD116704:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 1.C.124:  1 (14.3% from a total of 7)
+# CDD116634:  DirectHits:  1    Rescued Proteins:  5    Prots with Domain in 1.C.124:  6 (85.7% from a total of 7)
+1	1.C.124.1.1-P83240:24	CDD116704|Nohit	CDD116634|2-24:8.4e-13|Rescued1
+2	1.C.124.1.2-AGK88595:73	CDD116704|Nohit	CDD116634|24-47:4.19e-04|DirectHit
+3	1.C.124.1.3-API81363:74	CDD116704|Nohit	CDD116634|24-47:1.9e-09|Rescued1
+4	1.C.124.1.4-C5J888:75	CDD116704|Nohit	CDD116634|24-47:1.5e-08|Rescued1
+5	1.C.124.1.5-P82427:24	CDD116704|Nohit	CDD116634|2-23:6e-09|Rescued1
+6	1.C.124.1.6-AEX09222:76	CDD116704|Nohit	CDD116634|24-44:0.0048|Rescued1
+7	1.C.124.2.1-P83239:44	CDD116704|1-43:2.74e-16|DirectHit	CDD116634|Nohit

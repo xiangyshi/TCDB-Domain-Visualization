@@ -15,13 +15,13 @@ Dependencies:
     - System: For handling individual protein systems
     - util: For utility functions
 '''
-
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
 from collections import Counter
-from config import *
+from utility.config import *
 import scipy.stats as stats
 from System import *
 import utility.util as util
@@ -48,7 +48,7 @@ class Family:
         max_sys_len (int): Length of the longest protein in the family
     '''
      
-    def __init__(self, data, fam_id, merge=True):
+    def __init__(self, data, fam_id, output, merge=True):
         '''
         Initialize a Family object.
 
@@ -71,7 +71,11 @@ class Family:
                 
         self.holes = self.generate_checklist()
         self.gen_palette, self.char_palette, self.hole_palette = self.get_palettes()
-    
+        self.output = output
+
+        # Create and clean output directory
+        os.makedirs(os.path.join(self.output, self.fam_id), exist_ok=True)
+        
     def get_sequences(self):
         '''
         Reads and maps protein sequences from FASTA file.
@@ -224,11 +228,11 @@ class Family:
             ax.set_yticklabels(dom_ids)
 
             # Save as SVG
-            svg_file = f"plots/plot_{sys.sys_id}.svg"
+            svg_file = os.path.join(self.output, f"{self.fam_id}/general-{sys.sys_id}.svg")
             fig.savefig(svg_file, format='svg', bbox_inches='tight', pad_inches=0.2)
             svgs.append(svg_file)
             plt.close(fig)  # Close the figure to avoid memory issues
-        util.combine_svgs(svgs, "general/"  + self.fam_id + ".html")
+        util.combine_svgs(svgs, f"general-{self.fam_id}.html", os.path.join(self.output, self.fam_id))
     
     def plot_char(self):
         '''
@@ -263,12 +267,12 @@ class Family:
             ax.set_yticklabels(dom_ids)
 
             # Save as SVG
-            svg_file = f"plots/plot_{sys.sys_id}.svg"
+            svg_file = os.path.join(self.output, f"{self.fam_id}/char-{sys.sys_id}.svg")
             fig.savefig(svg_file, format='svg', bbox_inches='tight', pad_inches=0.2)
             svgs.append(svg_file)
 
             plt.close(fig)  # Close the figure to avoid memory issues
-        util.combine_svgs(svgs, '/char/' + self.fam_id + "-char.html")
+        util.combine_svgs(svgs, f"char-{self.fam_id}.html", os.path.join(self.output, self.fam_id))
 
     def plot_summary(self):
         '''
@@ -291,9 +295,11 @@ class Family:
         ax.set_xlabel('Residual')
         ax.set_title(self.fam_id + ' Summary')
 
-        # Save the plot to an HTML file
-        fig.savefig("plots/summary/"  + self.fam_id + "-summary.svg")
+        # Save the plot to an SVG file
+        svg_file = os.path.join(self.output, f"{self.fam_id}/summary-{self.fam_id}.svg")
+        fig.savefig(svg_file)
         plt.close()
+        util.combine_svgs([svg_file], f"/summary-{self.fam_id}.html", os.path.join(self.output, self.fam_id))
 
     def plot_arch(self):
         '''
@@ -363,10 +369,10 @@ class Family:
 
         ax.set_xlim(-1, 101)
 
-        svg = "plots/arch/"  + self.fam_id + "-arch.svg"
+        svg = os.path.join(self.output, f"{self.fam_id}/arch-{self.fam_id}.svg")
         fig.savefig(svg)
         plt.close()
-        util.combine_svgs([svg], '/arch/' + self.fam_id + "-arch.html")
+        util.combine_svgs([svg], f"/arch-{self.fam_id}.html", os.path.join(self.output, self.fam_id))
     
     def plot_holes(self):
         '''
@@ -391,8 +397,10 @@ class Family:
         ax.set_title(self.fam_id + ' Holes')
 
         # Save the plot to an HTML file
-        fig.savefig("plots/holes/"  + self.fam_id + "-holes.svg")
+        svg = os.path.join(self.output, f"{self.fam_id}/holes-{self.fam_id}.svg")
+        fig.savefig(svg)
         plt.close()
+        util.combine_svgs([svg], f"/holes-{self.fam_id}.html", os.path.join(self.output, self.fam_id))
     
     def generate_checklist(self):
         '''
@@ -435,3 +443,15 @@ class Family:
         for sys in self.systems:
             rows.append(sys.generate_csv_row())
         return rows
+
+    def plot(self, options=["general", "char", "arch", "holes", "summary"]):
+        if "general" in options:
+            self.plot_general()
+        if "char" in options:
+            self.plot_char()
+        if "arch" in options:
+            self.plot_arch()
+        if "holes" in options:
+            self.plot_holes()
+        if "summary" in options:
+            self.plot_summary()

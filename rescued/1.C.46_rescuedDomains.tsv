@@ -1,0 +1,7 @@
+# CDD128480:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 1.C.46:  5 (100.0% from a total of 5)
+# CDD425529:  DirectHits:  5    Rescued Proteins:  0    Prots with Domain in 1.C.46:  5 (100.0% from a total of 5)
+1	1.C.46.1.1-P23582:126	CDD425529|96-126:2.66e-10|DirectHit	CDD128480|103-126:1.82e-07|DirectHit
+2	1.C.46.1.2-Q9PW56:265	CDD425529|235-265:3.55e-11|DirectHit	CDD128480|242-265:4.93e-09|DirectHit
+3	1.C.46.2.1-Q78AW6:148	CDD425529|119-142:1.64e-08|DirectHit	CDD128480|124-142:2.22e-07|DirectHit
+4	1.C.46.2.2-P83962:145	CDD425529|100-133:7.82e-05|DirectHit	CDD128480|112-133:9.6e-09|Rescued1
+5	1.C.46.2.3-P01160:151	CDD425529|116-146:2.48e-08|DirectHit	CDD128480|123-146:9.07e-10|DirectHit

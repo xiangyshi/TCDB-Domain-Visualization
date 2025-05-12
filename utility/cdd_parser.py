@@ -1,7 +1,7 @@
 import subprocess
 import platform
 import pandas as pd
-from config import *
+from utility.config import *
 
 def clean_cdd(in_file, process_fam_ids) -> pd.DataFrame:
     """

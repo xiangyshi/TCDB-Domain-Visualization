@@ -1,0 +1,7 @@
+# CDD273344:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 1.A.139:  1 (20.0% from a total of 5)
+# CDD279595:  DirectHits:  2    Rescued Proteins:  3    Prots with Domain in 1.A.139:  5 (100.0% from a total of 5)
+1	1.A.139.1.1-P05060:677	CDD279595|26-674:6.51e-175|DirectHit	CDD273344|Nohit
+2	1.A.139.1.2-XP_041952406:717	CDD279595|32-607:2.8e-06|Rescued1	CDD273344|Nohit
+3	1.A.139.1.3-XP_041662071:676	CDD279595|27-671:6.6e-09|Rescued1	CDD273344|Nohit
+4	1.A.139.1.4-XP_035278978:617	CDD279595|26-610:7.8e-11|Rescued1	CDD273344|Nohit
+5	1.A.139.1.5-XP_025967337:469	CDD279595|25-469:2.06e-18|DirectHit	CDD273344|80-271:6.90e-04|DirectHit

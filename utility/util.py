@@ -19,7 +19,7 @@ Dependencies:
 import os
 
 import numpy as np
-from config import *
+from utility.config import *
 import scipy.stats as stats
 import networkx as nx
 from Domain import *
@@ -62,7 +62,7 @@ def find_holes(p_length, domain_regions):
         res.append([start, p_length, "-1", "-1"])
     return res
 
-def combine_svgs(svgs, filename):
+def combine_svgs(svgs, filename, output):
     """
     Combines multiple SVG files into a single HTML file.
 
@@ -84,8 +84,7 @@ def combine_svgs(svgs, filename):
             html_content += f'<div>{svg_content}</div>'
         os.remove(svg)
     html_content += '</body></html>'
-    
-    with open(f'plots/{filename}', "w") as f:
+    with open(f'{output}/{filename}', "w") as f:
         f.write(html_content)
 
 def merge_domains(domains):

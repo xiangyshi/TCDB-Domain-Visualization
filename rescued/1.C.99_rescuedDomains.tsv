@@ -1,0 +1,12 @@
+# CDD439221:  DirectHits:  4    Rescued Proteins:  2    Prots with Domain in 1.C.99:  6 (75.0% from a total of 8)
+# CDD394947:  DirectHits:  4    Rescued Proteins:  3    Prots with Domain in 1.C.99:  7 (87.5% from a total of 8)
+# CDD394946:  DirectHits:  5    Rescued Proteins:  3    Prots with Domain in 1.C.99:  8 (100.0% from a total of 8)
+# CDD152528:  DirectHits:  5    Rescued Proteins:  3    Prots with Domain in 1.C.99:  8 (100.0% from a total of 8)
+1	1.C.99.1.1-Q7TA23:39	CDD152528|1-39:1.05e-11|DirectHit	CDD394946|2-35:8.28e-15|DirectHit	CDD394947|Nohit	CDD439221|Nohit
+2	1.C.99.1.2-Q0Q478:122	CDD152528|1-117:1.59e-56|DirectHit	CDD394946|2-120:2.75e-83|DirectHit	CDD394947|2-119:5.92e-13|DirectHit	CDD439221|16-117:6.76e-51|DirectHit
+3	1.C.99.1.3-Q0Q469:121	CDD152528|1-118:4.51e-69|DirectHit	CDD394946|2-120:2.18e-15|DirectHit	CDD394947|2-121:1.15e-86|DirectHit	CDD439221|18-121:5.17e-64|DirectHit
+4	1.C.99.1.4-YP_009724396:121	CDD152528|1-118:2.10e-39|DirectHit	CDD394946|2-120:4.77e-10|DirectHit	CDD394947|2-121:7.15e-54|DirectHit	CDD439221|18-121:2.40e-63|DirectHit
+5	1.C.99.1.5-NP_849177:84	CDD152528|7-79:8.47e-40|DirectHit	CDD394946|7-82:8.44e-51|DirectHit	CDD394947|21-80:1.10e-04|DirectHit	CDD439221|7-79:1.12e-25|DirectHit
+6	1.C.99.2.1-AAX16199:101	CDD152528|1-90:0.00032|Rescued1	CDD394946|2-90:0.0011|Rescued1	CDD394947|2-90:0.0086|Rescued1	CDD439221|Nohit
+7	1.C.99.2.2-YP_009724395:121	CDD152528|1-35:0.00038|Rescued1	CDD394946|2-35:0.0013|Rescued1	CDD394947|2-81:1.7e-07|Rescued2	CDD439221|20-81:2e-07|Rescued2
+8	1.C.99.2.3-QCX35176:120	CDD152528|21-93:0.0094|Rescued1	CDD394946|4-93:0.0097|Rescued2	CDD394947|21-93:0.0093|Rescued1	CDD439221|21-93:0.0067|Rescued1

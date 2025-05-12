@@ -1,0 +1,8 @@
+# CDD433761:  DirectHits:  2    Rescued Proteins:  4    Prots with Domain in 8.A.42:  6 (100.0% from a total of 6)
+# CDD432899:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 8.A.42:  1 (16.7% from a total of 6)
+1	8.A.42.1.1-O30472:104	CDD433761|10-97:3.4e-05|Rescued1	CDD432899|Nohit
+2	8.A.42.1.2-A8FE88:105	CDD433761|23-97:0.00013|Rescued1	CDD432899|Nohit
+3	8.A.42.1.3-E6UK93:109	CDD433761|2-98:2.25e-19|DirectHit	CDD432899|Nohit
+4	8.A.42.1.4-D5DPT8:107	CDD433761|54-102:0.0027|Rescued1	CDD432899|Nohit
+5	8.A.42.1.5-R4G5U4:116	CDD433761|13-110:4.4e-05|Rescued1	CDD432899|Nohit
+6	8.A.42.1.6-R5LHN3:356	CDD433761|2-103:2.25e-41|DirectHit	CDD432899|125-185:5.00e-17|DirectHit

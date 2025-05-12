@@ -1,0 +1,7 @@
+# CDD227902:  DirectHits:  1    Rescued Proteins:  3    Prots with Domain in 8.A.130:  4 (100.0% from a total of 4)
+# CDD431126:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 8.A.130:  1 (25.0% from a total of 4)
+# CDD224195:  DirectHits:  1    Rescued Proteins:  3    Prots with Domain in 8.A.130:  4 (100.0% from a total of 4)
+1	8.A.130.1.1-Q9BSN7:226	CDD224195|98-212:2.5e-07|Rescued1	CDD431126|Nohit	CDD227902|98-215:2.3e-07|Rescued1
+2	8.A.130.1.2-WP_012641885:165	CDD224195|4-130:4.54e-05|DirectHit	CDD431126|Nohit	CDD227902|1-145:2.07e-06|DirectHit
+3	8.A.130.2.1-XP_025059994:834	CDD224195|731-778:1.2e-14|Rescued2	CDD431126|443-551:1.00e-41|DirectHit	CDD227902|731-778:3e-14|Rescued2
+4	8.A.130.2.2-AAI22130:152	CDD224195|87-135:5.7e-13|Rescued2	CDD431126|Nohit	CDD227902|87-135:1.2e-12|Rescued2

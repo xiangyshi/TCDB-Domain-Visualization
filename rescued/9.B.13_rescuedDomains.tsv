@@ -1,0 +1,7 @@
+# CDD429826:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 9.B.13:  4 (100.0% from a total of 4)
+# CDD170240:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 9.B.13:  4 (100.0% from a total of 4)
+# CDD227797:  DirectHits:  4    Rescued Proteins:  0    Prots with Domain in 9.B.13:  4 (100.0% from a total of 4)
+1	9.B.13.1.1-P0ADB7:48	CDD227797|1-44:2.95e-12|DirectHit	CDD429826|24-43:8.9e-07|Rescued1	CDD170240|1-48:1.90e-19|DirectHit
+2	9.B.13.1.2-H0J079:44	CDD227797|1-42:4.74e-10|DirectHit	CDD429826|23-42:7.44e-06|DirectHit	CDD170240|6-42:2.73e-05|DirectHit
+3	9.B.13.2.1-B8H2Y5:45	CDD227797|5-41:1.99e-06|DirectHit	CDD429826|21-40:4.01e-04|DirectHit	CDD170240|6-45:3.4e-09|Rescued1
+4	9.B.13.2.2-K9HWE0:63	CDD227797|33-59:1.81e-07|DirectHit	CDD429826|39-58:1.6e-05|Rescued1	CDD170240|22-61:1.7e-08|Rescued1

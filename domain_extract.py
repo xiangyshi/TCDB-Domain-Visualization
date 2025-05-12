@@ -11,7 +11,7 @@ for specified protein families.
 from utility.util import *
 from utility.cdd_parser import clean_cdd
 from utility.rescue_parser import clean_rescue
-from config import *
+from utility.config import *
 import argparse
 import numpy as np
 import pandas as pd
@@ -57,11 +57,24 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "-d", "--debug",
-        type=int,
-        choices=[0, 1],
-        default=0,
-        help="Enable debug logs (1 = enable, 0 = disable). Default is 0."
+        "-p", "--plot",
+        type=str,
+        default=None,
+        help="Plots to generate. CDD options: all / general, char, arch, holes, summary. Rescue options: all / char_rescue. Default: None"
+    )
+
+    parser.add_argument(
+        "-d", "--data",
+        type=str,
+        default="",
+        help="Output csv file to save protein architecture data for AI Classification. Default: None"
+    )
+
+    parser.add_argument(
+        "-o", "--output",
+        type=str,
+        default="output/",
+        help="Output directory. Default: output/"
     )
 
     parser.add_argument(
@@ -82,7 +95,7 @@ def parse_arguments():
     
     # Check Target isFile
     if not os.path.isfile(args.tcids):
-        print(f"The argument -t/--tcids is not a file: {args.tcids}")
+        print(f"The argument -t/--tcids is not a file: {args.tcids}, treating as comma-separated list.")
         isFile = False
 
     return args, isFile
@@ -104,6 +117,12 @@ def main():
 
     # Configuration settings from arguments
     merge = bool(args.merge_overlapping_domain)
+    plot_options = args.plot.split(",") if args.plot is not None else []
+    datafile = args.data if args.data else None
+    outputdir = args.output
+
+    # Create output directory if it doesn't exist
+    os.makedirs(outputdir, exist_ok=True)
 
     process_fam_ids = set()
 
@@ -133,27 +152,28 @@ def main():
 
     # Process each family and generate output rows
     rows = []
-    print(family_data)
     print('\n\n\nProcessing Families...\n\n')
 
     for cnt, fam in enumerate(unique_fam_ids):
+        print("Processing", fam, str(round(float((cnt) * 100) / len(unique_fam_ids), 2)) + "%")
         if args.rescue_input:
-            curr_fam = RescueFamily(family_data[family_data['family'] == fam], fam)
+            curr_fam = RescueFamily(family_data[family_data['family'] == fam], fam, outputdir, merge)
             curr_fam.plot_char_rescue()
         else:
-            curr_fam = Family(family_data[family_data['family'] == fam], fam)
-            curr_fam.plot_general()
-            curr_fam.plot_char()
-            curr_fam.plot_arch()
-            curr_fam.plot_holes()
-            curr_fam.plot_summary()
-        curr_data = curr_fam.generate_csv_rows()
-        rows += curr_data
-        print("Processing", fam, str(round(float((cnt) * 100) / len(unique_fam_ids), 2)) + "%")
+            curr_fam = Family(family_data[family_data['family'] == fam], fam, outputdir, merge)
+
+        if "all" in plot_options:
+            curr_fam.plot()
+        else:
+            curr_fam.plot(options=plot_options)
+
+        if args.data:
+            curr_data = curr_fam.generate_csv_rows()
+            rows += curr_data
 
     
     # Write results to CSV file
-    with open("training_data.csv", "w") as file:
+    with open(os.path.join(outputdir, datafile), "w") as file:
         writer = csv.writer(file, lineterminator='\n')
         writer.writerow(["Accession", "Length", "Family", "Subfamily", "Domains", "Seperators"])
         writer.writerows(rows)

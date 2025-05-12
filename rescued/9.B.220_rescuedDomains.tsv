@@ -1,0 +1,6 @@
+# CDD224900:  DirectHits:  2    Rescued Proteins:  1    Prots with Domain in 9.B.220:  3 (100.0% from a total of 3)
+# CDD426281:  DirectHits:  2    Rescued Proteins:  1    Prots with Domain in 9.B.220:  3 (100.0% from a total of 3)
+# CDD429099:  DirectHits:  2    Rescued Proteins:  0    Prots with Domain in 9.B.220:  2 (66.7% from a total of 3)
+1	9.B.220.1.1-AKM78660:243	CDD429099|Nohit	CDD426281|94-192:0.0018|Rescued2	CDD224900|47-214:1.8e-05|Rescued2
+2	9.B.220.2.1-WP_067429597:254	CDD429099|12-91:1.82e-39|DirectHit	CDD426281|104-210:4.43e-06|DirectHit	CDD224900|1-245:3.00e-30|DirectHit
+3	9.B.220.2.2-WP_086853646:259	CDD429099|17-93:2.19e-40|DirectHit	CDD426281|102-214:1.94e-04|DirectHit	CDD224900|17-235:8.03e-26|DirectHit

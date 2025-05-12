@@ -1,0 +1,7 @@
+# CDD238072:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 8.A.106:  4 (100.0% from a total of 4)
+# CDD425492:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 8.A.106:  4 (100.0% from a total of 4)
+# CDD197643:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 8.A.106:  4 (100.0% from a total of 4)
+1	8.A.106.1.1-P06833:80	CDD197643|29-56:0.0033|Rescued2	CDD425492|29-56:0.0033|Rescued2	CDD238072|29-56:0.0033|Rescued2
+2	8.A.106.1.2-XP_014944655:117	CDD197643|67-93:0.0031|Rescued1	CDD425492|67-93:0.0024|Rescued1	CDD238072|67-93:0.0031|Rescued1
+3	8.A.106.2.1-Q9I8P2:97	CDD197643|29-64:8.64e-19|DirectHit	CDD425492|30-64:6.29e-13|DirectHit	CDD238072|29-64:1.10e-17|DirectHit
+4	8.A.106.2.2-E2E4L2:99	CDD197643|29-64:1.04e-14|DirectHit	CDD425492|30-64:1.54e-11|DirectHit	CDD238072|29-64:3.43e-13|DirectHit

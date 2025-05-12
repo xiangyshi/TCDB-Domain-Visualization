@@ -1,0 +1,9 @@
+# CDD433037:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.324:  1 (25.0% from a total of 4)
+# CDD407895:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.324:  1 (25.0% from a total of 4)
+# CDD275054:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.324:  1 (25.0% from a total of 4)
+# CDD436403:  DirectHits:  1    Rescued Proteins:  2    Prots with Domain in 9.B.324:  3 (75.0% from a total of 4)
+# CDD275060:  DirectHits:  1    Rescued Proteins:  1    Prots with Domain in 9.B.324:  2 (50.0% from a total of 4)
+1	9.B.324.1.1-G1UE81:469	CDD433037|Nohit	CDD275054|Nohit	CDD407895|Nohit	CDD436403|167-218:0.0011|Rescued2	CDD275060|Nohit
+2	9.B.324.2.1-P35826:393	CDD433037|Nohit	CDD275054|Nohit	CDD407895|Nohit	CDD436403|Nohit	CDD275060|Nohit
+3	9.B.324.3.1-O68840:1099	CDD433037|273-355:4.13e-05|DirectHit	CDD275054|Nohit	CDD407895|69-192:4.66e-19|DirectHit	CDD436403|901-980:1.43e-05|DirectHit	CDD275060|427-1099:4.9e-19|Rescued2
+4	9.B.324.4.1-P25062:827	CDD433037|Nohit	CDD275054|7-35:5.51e-09|DirectHit	CDD407895|Nohit	CDD436403|361-405:0.00078|524-559:0.00012|666-740:0.00031|Rescued2	CDD275060|49-807:0.0|DirectHit

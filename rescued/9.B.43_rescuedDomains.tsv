@@ -1,0 +1,6 @@
+# CDD428809:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 9.B.43:  4 (100.0% from a total of 4)
+# CDD226271:  DirectHits:  4    Rescued Proteins:  0    Prots with Domain in 9.B.43:  4 (100.0% from a total of 4)
+1	9.B.43.1.1-A9CI11:420	CDD226271|3-412:0.0|DirectHit	CDD428809|5-298:0.0|DirectHit
+2	9.B.43.1.2-WP_031370192:354	CDD226271|22-348:2.36e-24|DirectHit	CDD428809|25-295:3.45e-30|DirectHit
+3	9.B.43.2.1-V5C7X7:233	CDD226271|10-180:5.51e-21|DirectHit	CDD428809|15-181:0.0086|Rescued2
+4	9.B.43.2.2-Q0EZ69:196	CDD226271|40-196:8.48e-20|DirectHit	CDD428809|24-190:4.7e-05|Rescued1

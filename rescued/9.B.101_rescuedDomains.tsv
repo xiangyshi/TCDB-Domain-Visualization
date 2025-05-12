@@ -1,0 +1,10 @@
+# CDD411113:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.101:  1 (33.3% from a total of 3)
+# CDD408741:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.101:  1 (33.3% from a total of 3)
+# CDD224117:  DirectHits:  1    Rescued Proteins:  1    Prots with Domain in 9.B.101:  2 (66.7% from a total of 3)
+# CDD182409:  DirectHits:  1    Rescued Proteins:  1    Prots with Domain in 9.B.101:  2 (66.7% from a total of 3)
+# CDD224241:  DirectHits:  1    Rescued Proteins:  1    Prots with Domain in 9.B.101:  2 (66.7% from a total of 3)
+# CDD397531:  DirectHits:  1    Rescued Proteins:  1    Prots with Domain in 9.B.101:  2 (66.7% from a total of 3)
+# CDD426900:  DirectHits:  1    Rescued Proteins:  0    Prots with Domain in 9.B.101:  1 (33.3% from a total of 3)
+1	9.B.101.1.1-O07910:1247	CDD397531|934-971:9.46e-16|972-1005:5.32e-13|1006-1039:5.64e-14|1040-1072:8.00e-11|DirectHit	CDD408741|1-871:0.0|DirectHit	CDD411113|1-1247:0.0|DirectHit	CDD224117|618-787:4e-05|Rescued1	CDD182409|618-799:0.00025|Rescued1	CDD224241|618-799:0.00029|Rescued1	CDD426900|Nohit
+2	9.B.101.2.1-XP_028573429:1272	CDD397531|1080-1117:8.3e-05|1175-1212:0.00011|Rescued1	CDD408741|Nohit	CDD411113|Nohit	CDD224117|Nohit	CDD182409|Nohit	CDD224241|Nohit	CDD426900|Nohit
+3	9.B.101.3.1-EDU99479:376	CDD397531|Nohit	CDD408741|Nohit	CDD411113|Nohit	CDD224117|18-190:1.14e-05|DirectHit	CDD182409|13-376:3.27e-82|DirectHit	CDD224241|20-372:7.78e-69|DirectHit	CDD426900|135-372:2.85e-103|DirectHit

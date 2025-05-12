@@ -1,0 +1,9 @@
+# CDD71530:  DirectHits:  1    Rescued Proteins:  3    Prots with Domain in 8.B.2:  4 (57.1% from a total of 7)
+# CDD71554:  DirectHits:  1    Rescued Proteins:  2    Prots with Domain in 8.B.2:  3 (42.9% from a total of 7)
+1	8.B.2.1.1-P82850:22	CDD71554|Nohit	CDD71530|1-22:1.95e-04|DirectHit
+2	8.B.2.1.2-P0DJ33:62	CDD71554|Nohit	CDD71530|40-61:1e-09|Rescued1
+3	8.B.2.1.3-AEX09227:69	CDD71554|Nohit	CDD71530|48-66:0.0056|Rescued2
+4	8.B.2.1.4-P0DJ36:64	CDD71554|Nohit	CDD71530|41-61:0.00026|Rescued1
+5	8.B.2.2.1-Q6WGI9:36	CDD71554|1-36:3.48e-09|DirectHit	CDD71530|Nohit
+6	8.B.2.2.2-A9QLM3:65	CDD71554|27-63:9.3e-06|Rescued1	CDD71530|Nohit
+7	8.B.2.2.3-API81324:64	CDD71554|36-62:0.00056|Rescued1	CDD71530|Nohit

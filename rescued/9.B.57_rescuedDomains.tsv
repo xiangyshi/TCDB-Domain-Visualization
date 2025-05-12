@@ -1,0 +1,8 @@
+# CDD402114:  DirectHits:  3    Rescued Proteins:  0    Prots with Domain in 9.B.57:  3 (60.0% from a total of 5)
+# CDD431228:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 9.B.57:  5 (100.0% from a total of 5)
+# CDD176490:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 9.B.57:  4 (80.0% from a total of 5)
+1	9.B.57.1.1-G4MKH1:520	CDD431228|190-435:5.07e-102|DirectHit	CDD402114|62-163:7.70e-34|DirectHit	CDD176490|69-237:7.16e-21|DirectHit
+2	9.B.57.1.2-P53584:459	CDD431228|176-413:4.36e-80|DirectHit	CDD402114|Nohit	CDD176490|Nohit
+3	9.B.57.1.3-G2R6Y3:602	CDD431228|301-592:9.32e-166|DirectHit	CDD402114|56-159:1.22e-35|DirectHit	CDD176490|67-164:2.14e-08|DirectHit
+4	9.B.57.1.4-SAL96129:686	CDD431228|140-443:3e-09|Rescued1	CDD402114|Nohit	CDD176490|376-437:0.007|Rescued2
+5	9.B.57.1.5-OAJ10018:981	CDD431228|600-929:4.65e-117|DirectHit	CDD402114|269-361:6.74e-09|DirectHit	CDD176490|274-371:5.1e-08|Rescued1

@@ -22,7 +22,7 @@ import matplotlib.colors as mcolors
 import matplotlib.transforms as mtrs
 import seaborn as sns
 from collections import Counter
-from config import *
+from utility.config import *
 import scipy.stats as stats
 import networkx as nx
 from Family import *

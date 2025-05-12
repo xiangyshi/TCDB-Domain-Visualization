@@ -1,0 +1,10 @@
+# CDD435690:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 2.A.111:  5 (100.0% from a total of 5)
+# CDD427389:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 2.A.111:  5 (100.0% from a total of 5)
+# CDD238344:  DirectHits:  4    Rescued Proteins:  1    Prots with Domain in 2.A.111:  5 (100.0% from a total of 5)
+# CDD238536:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 2.A.111:  5 (100.0% from a total of 5)
+# CDD223983:  DirectHits:  3    Rescued Proteins:  2    Prots with Domain in 2.A.111:  5 (100.0% from a total of 5)
+1	2.A.111.1.1-Q8F285:489	CDD238344|158-486:1.03e-11|DirectHit	CDD238536|158-486:1.08e-07|DirectHit	CDD223983|96-489:5.12e-40|DirectHit	CDD435690|56-488:0.0|DirectHit	CDD427389|158-409:3.24e-05|DirectHit
+2	2.A.111.1.2-Q9K0M2:473	CDD238344|63-466:1.20e-14|DirectHit	CDD238536|116-466:1.83e-05|DirectHit	CDD223983|25-469:9.56e-87|DirectHit	CDD435690|23-468:0.0|DirectHit	CDD427389|96-413:5.30e-06|DirectHit
+3	2.A.111.1.3-Q4QSA9:527	CDD238344|145-508:5.80e-11|DirectHit	CDD238536|205-499:1.18e-06|DirectHit	CDD223983|81-510:2.58e-25|DirectHit	CDD435690|79-510:1.91e-152|DirectHit	CDD427389|163-420:2.44e-06|DirectHit
+4	2.A.111.2.1-Q9F206:428	CDD238344|43-397:1.57e-05|DirectHit	CDD238536|127-399:1.2e-05|Rescued1	CDD223983|35-425:4.5e-05|Rescued1	CDD435690|35-425:0.00012|Rescued1	CDD427389|127-388:0.00062|Rescued1
+5	2.A.111.2.2-Q821X2:450	CDD238344|61-445:7.6e-33|Rescued1	CDD238536|134-445:0.0042|Rescued2	CDD223983|65-445:0.0004|Rescued1	CDD435690|65-445:0.00037|Rescued1	CDD427389|123-398:0.0021|Rescued2

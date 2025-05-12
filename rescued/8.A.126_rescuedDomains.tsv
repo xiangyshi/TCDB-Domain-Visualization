@@ -1,0 +1,9 @@
+# CDD429519:  DirectHits:  3    Rescued Proteins:  0    Prots with Domain in 8.A.126:  3 (100.0% from a total of 3)
+# CDD425753:  DirectHits:  2    Rescued Proteins:  0    Prots with Domain in 8.A.126:  2 (66.7% from a total of 3)
+# CDD227535:  DirectHits:  2    Rescued Proteins:  0    Prots with Domain in 8.A.126:  2 (66.7% from a total of 3)
+# CDD227471:  DirectHits:  2    Rescued Proteins:  1    Prots with Domain in 8.A.126:  3 (100.0% from a total of 3)
+# CDD214540:  DirectHits:  2    Rescued Proteins:  0    Prots with Domain in 8.A.126:  2 (66.7% from a total of 3)
+# CDD214733:  DirectHits:  3    Rescued Proteins:  0    Prots with Domain in 8.A.126:  3 (100.0% from a total of 3)
+1	8.A.126.1.1-Q8NI08:942	CDD214733|780-942:5.80e-50|DirectHit	CDD429519|806-941:3.05e-35|DirectHit	CDD214540|Nohit	CDD425753|Nohit	CDD227535|Nohit	CDD227471|795-939:1.40e-20|DirectHit
+2	8.A.126.1.2-Q9VIH7:587	CDD214733|410-585:1.42e-58|DirectHit	CDD429519|433-585:1.55e-31|DirectHit	CDD214540|82-293:6.77e-13|DirectHit	CDD425753|89-293:2.20e-10|DirectHit	CDD227535|29-290:7.13e-08|DirectHit	CDD227471|422-582:1.42e-13|DirectHit
+3	8.A.126.1.3-XP_027796271:655	CDD214733|336-443:5.14e-39|DirectHit	CDD429519|362-438:2.27e-16|DirectHit	CDD214540|115-254:4.91e-13|DirectHit	CDD425753|48-253:4.17e-31|DirectHit	CDD227535|114-325:4.12e-04|DirectHit	CDD227471|351-442:4e-22|Rescued1

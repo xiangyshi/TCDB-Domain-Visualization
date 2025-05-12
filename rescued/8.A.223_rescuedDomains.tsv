@@ -1,0 +1,7 @@
+# CDD308906:  DirectHits:  1    Rescued Proteins:  3    Prots with Domain in 8.A.223:  4 (100.0% from a total of 4)
+# CDD369388:  DirectHits:  2    Rescued Proteins:  1    Prots with Domain in 8.A.223:  3 (75.0% from a total of 4)
+# CDD254231:  DirectHits:  2    Rescued Proteins:  2    Prots with Domain in 8.A.223:  4 (100.0% from a total of 4)
+1	8.A.223.1.1-B7UM99:550	CDD369388|337-550:1.18e-94|DirectHit	CDD254231|1-265:7.03e-124|DirectHit	CDD308906|282-336:1.1e-22|Rescued1
+2	8.A.223.1.2-WP_024159798:543	CDD369388|332-543:3.2e-07|Rescued1	CDD254231|1-260:2.4e-24|Rescued1	CDD308906|278-331:2.3e-17|Rescued1
+3	8.A.223.1.3-WP_117026444:529	CDD369388|Nohit	CDD254231|11-254:2.9e-05|Rescued1	CDD308906|338-392:3.7e-14|Rescued1
+4	8.A.223.1.4-AAG25642:547	CDD369388|335-547:1.22e-90|DirectHit	CDD254231|1-257:3.93e-102|DirectHit	CDD308906|280-334:1.18e-30|DirectHit
