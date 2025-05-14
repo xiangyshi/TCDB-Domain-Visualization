@@ -173,10 +173,11 @@ def main():
 
     
     # Write results to CSV file
-    with open(os.path.join(outputdir, datafile), "w") as file:
-        writer = csv.writer(file, lineterminator='\n')
-        writer.writerow(["Accession", "Length", "Family", "Subfamily", "Domains", "Seperators"])
-        writer.writerows(rows)
+    if datafile:
+        with open(os.path.join(outputdir, datafile), "w") as file:
+            writer = csv.writer(file, lineterminator='\n')
+            writer.writerow(["Accession", "Length", "Family", "Subfamily", "Domains", "Seperators"])
+            writer.writerows(rows)
 
     # Display execution time
     end = time.time()

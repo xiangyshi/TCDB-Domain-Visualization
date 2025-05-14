@@ -192,6 +192,8 @@ class Family:
         svgs = []
         for i, sys in enumerate(self.systems):
             size = len([0 for dom in sys.domains if dom.type != "hole"])
+            # Ensure size is at least 1 to avoid invalid figure dimensions
+            size = max(1, size)
             fig, ax = plt.subplots(figsize=(16, 0.25 * (size + 2)))  # Adjust size as needed
             
             ax.set_title(sys.sys_id)
