@@ -158,7 +158,6 @@ def main():
         print("Processing", fam, str(round(float((cnt) * 100) / len(unique_fam_ids), 2)) + "%")
         if args.rescue_input:
             curr_fam = RescueFamily(family_data[family_data['family'] == fam], fam, outputdir, merge)
-            curr_fam.plot_char_rescue()
         else:
             curr_fam = Family(family_data[family_data['family'] == fam], fam, outputdir, merge)
 
